@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+javac -d bin src/digOut/Main.java src/digOut/GameBoard.java src/digOut/Position.java src/digOut/Player.java src/digOut/Control.java src/digOut/Monster.java src/digOut/Records.java;
+java -cp ./bin digOut.Main;
+
+

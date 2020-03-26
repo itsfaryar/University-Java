@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+javac src/main/MasterMind.java src/main/GameOperator.java;
+java -cp ./src main.MasterMind;
+
+
