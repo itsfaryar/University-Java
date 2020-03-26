@@ -2,7 +2,7 @@ package spaceShip;
 
 import java.util.Scanner;
 public class Main {
-	 //			 			3 (1,1)3.4_(2,3)1_(1,2)4
+	 //			 				3 (1,1)3.4_(2,3)1_(1,2)4
 	private static Ship sp;//	0-2_2-1
 	private static Scanner sysin=new Scanner(System.in);
 	public static void main(String[] args) {
