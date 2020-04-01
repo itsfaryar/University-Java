@@ -9,11 +9,19 @@ public class Main {
 	public static void main(String[] args) {
 		double time=0;
 		Meteorite[] MTR;
-		System.out.println("Please Enter Meteorites' inputs.");
-		MTR=createMeteorites(ignorSpaces(sysin.nextLine()));
-		System.out.println("Please Enter Ship inputs.");
-		sp=new Ship(ignorSpaces(sysin.nextLine()));
-		Radar RD=new Radar(MTR, sp);
+		Radar RD=null;
+		boolean flg=true;
+		while(flg) {
+			try {
+				System.out.println("Please Enter Meteorites' inputs.");
+				MTR=createMeteorites(ignorSpaces(sysin.nextLine()));
+				System.out.println("Please Enter Ship inputs.");
+				sp=new Ship(ignorSpaces(sysin.nextLine()));
+				sp.getSpeed();
+				RD=new Radar(MTR, sp);
+				flg=false;
+			} catch (Exception e) {}
+		}
 		while(true) {
 			System.out.println("+==============================+");
 			RD.refreshShipStatus();
