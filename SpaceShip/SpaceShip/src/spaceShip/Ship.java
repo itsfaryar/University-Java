@@ -12,6 +12,9 @@ public class Ship {
 		this.pos=new Position();
 		this.virtual_pos=new Position();
 	}
+	public void moveShip() {
+		this.pos.x++;
+	}
 	@SuppressWarnings("unused")
 	public double getSpeed() {
 		int x_pos=-1;

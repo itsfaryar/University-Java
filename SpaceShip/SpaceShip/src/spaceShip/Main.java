@@ -2,26 +2,33 @@ package spaceShip;
 
 import java.util.Scanner;
 public class Main {
-	 //			 				3 (1,1)3.4_(2,3)1_(1,2)4
-	private static Ship sp;//	0-2_2-1
+	 //			 				6 (1,2)0.7_(2,1)2_(3,3)1.5_(4,1)0.2_(5,4)0.8_(6,2)0.5
+	private static Ship sp;//	0-1_1-2_2-1_4-2
 	private static Scanner sysin=new Scanner(System.in);
 	public static void main(String[] args) {
+		int c=0;
 		Meteorite[] MTR;
 		System.out.println("Please Enter Meteorites' inputs.");
 		MTR=createMeteorites(ignorSpaces(sysin.nextLine()));
 		System.out.println("Please Enter Ship inputs.");
 		sp=new Ship(ignorSpaces(sysin.nextLine()));
 		Radar RD=new Radar(MTR, sp);
-		showRadar(RD.getRadarView());
-		MTR=RD.getMeteorites();
-		sp=RD.getShip();
-		System.out.println("============");
-		System.out.println(sp.pos.x);
-		printMeteoriteValues(MTR);
-		System.out.println("============");
-		System.out.println(sp.virtual_pos.x);
-		for(int i=0;i<MTR.length;i++) {
-			System.out.println(MTR[i].virtual_pos.x+":"+MTR[i].virtual_pos.y+" --> "+MTR[i].speed);
+		while(true) {
+			MTR=RD.getMeteorites();
+			sp=RD.getShip();
+			RD=new Radar(MTR, sp);
+			showRadar(RD.getRadarView());
+			double speed_tmp;
+			double time;
+			speed_tmp=sp.getSpeed();
+			sp.moveShip();
+			time=1/speed_tmp;
+			for(int i=0;i<MTR.length;i++) {
+				MTR[i].pos.y-=(MTR[i].speed)*time;
+			}
+			System.out.println("========");
+			c++;
+			if(c>=10)break;
 		}
 	}
 	private static void showRadar(char[][]radar) {
