@@ -1,7 +1,7 @@
 package spaceShip;
 
 public class Ship {
-	enum ship_status{SAFE,CRASHED}
+	enum ship_status{SAFE,CRASHED,SAIFLY_PASSED}
 	public Position pos;
 	public Position virtual_pos;
 	public ship_status state;
@@ -9,11 +9,17 @@ public class Ship {
 	private String speed_parameters;
 	public Ship(String speed_parameters) {
 		this.speed_parameters='_'+speed_parameters+'_';
+		state=ship_status.SAFE;
 		this.pos=new Position();
 		this.virtual_pos=new Position();
 	}
-	public void moveShip() {
-		this.pos.x++;
+	public double moveShip(double l) {
+		double t=l/getSpeed();
+		this.pos.x+=l;
+		return t;
+	}
+	public double getTime(double l) {
+		return (l/getSpeed());
 	}
 	@SuppressWarnings("unused")
 	public double getSpeed() {

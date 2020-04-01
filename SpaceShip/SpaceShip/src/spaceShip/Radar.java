@@ -1,14 +1,19 @@
 package spaceShip;
 
+import java.text.DecimalFormat;
+
+import spaceShip.Ship.ship_status;
 
 public class Radar {
 	private Meteorite[]MTR;
 	private Ship sp;
 	private Position min_pos;
 	private Position max_pos;
+	double safe_point=-1;
 	public Radar(Meteorite[]MTR,Ship sp) {
 		this.MTR=MTR;
 		this.sp=sp;
+		safe_point=getSafePoint();
 		//this.radar_pos_calibrator=getMinPos();
 	}
 	public Meteorite[]getMeteorites(){
@@ -17,6 +22,26 @@ public class Radar {
 	public Ship getShip() {
 		return sp;
 	}
+	public void refreshShipStatus() {
+		if(sp.pos.x>safe_point)sp.state=ship_status.SAIFLY_PASSED;
+		else {
+			for(int i=0;i<MTR.length;i++) {
+				if(MTR[i].pos.isEqual(sp.pos)) {
+					sp.state=ship_status.CRASHED;
+				}
+			}
+		}
+	}
+	public String getRadarData(double time) {
+		String out=new String();
+		out+="t="+String.format("%.2f",time)+" ";
+		out+="R="+getCoordinate(sp.pos)+" ";
+		for(int i=0;i<MTR.length;i++) {
+			out+="M"+(i+1)+"="+getCoordinate(MTR[i].pos)+" ";
+		}
+		out+=sp.state;
+		return out;
+	}
 	public char[][] getRadarView() {
 		generateVirtualPositions();
 		this.min_pos=getMinPos();
@@ -24,15 +49,21 @@ public class Radar {
 		char[][] radar=new char[rondInt(max_pos.y+1)][rondInt(max_pos.x+1)];
 		for(int i=0;i<radar.length;i++) {
 			for(int j=0;j<radar[i].length;j++) {
-				radar[i][j]='#';
+				radar[i][j]='.';
 			}
 		}
-		if(sp.virtual_pos.x>=0 && sp.virtual_pos.y>=0) {
-			radar[rondInt(sp.virtual_pos.y)][rondInt(sp.virtual_pos.x)]='S';
-		}
+		
 		for(int i=0;i<MTR.length;i++) {
 			if(MTR[i].virtual_pos.x>=0 && MTR[i].virtual_pos.y>=0) {
 				radar[rondInt(MTR[i].virtual_pos.y)][rondInt(MTR[i].virtual_pos.x)]='M';
+			}
+		}
+		if(sp.virtual_pos.x>=0 && sp.virtual_pos.y>=0) {
+			if(sp.state==ship_status.CRASHED) {
+				radar[rondInt(sp.virtual_pos.y)][rondInt(sp.virtual_pos.x)]='X';
+			}
+			else {
+				radar[rondInt(sp.virtual_pos.y)][rondInt(sp.virtual_pos.x)]='S';
 			}
 		}
 		return radar;
@@ -40,6 +71,11 @@ public class Radar {
 	}
 	public int convertTo1DPos(Position p) {
 		return rondInt((p.x*max_pos.x)+p.y);
+	}
+	//////////////////////
+	private String getCoordinate(Position p) {
+		DecimalFormat f = new DecimalFormat("0.00");
+		return "("+f.format(p.x)+","+f.format(p.y)+")";
 	}
 	private int rondInt(double inp) {
 		return (int)(inp+0.5);
@@ -73,6 +109,16 @@ public class Radar {
 			}
 		}
 	}
+	private double getSafePoint() {
+		double out=-1;
+		out=MTR[0].pos.x;
+		for(int i=0;i<MTR.length;i++) {
+			if(MTR[i].pos.x>out) {
+				out=MTR[i].pos.x;
+			}
+		}
+		return out;
+	}
 	private Position getMinPos() {
 		Position pos=new Position();
 		pos.y=sp.pos.y;
@@ -82,7 +128,6 @@ public class Radar {
 			if(MTR[i].pos.x<pos.x) {pos.x=MTR[i].pos.x;}
 			if(MTR[i].pos.y<pos.y) {pos.y=MTR[i].pos.y;}
 		}
-		System.out.println(flg+"min:"+"x:"+pos.x+" "+"y:"+pos.y);
 		return pos;
 	}
 	private Position getMaxPos() {
@@ -94,7 +139,6 @@ public class Radar {
 			if(MTR[i].pos.x>pos.x) {pos.x=MTR[i].pos.x;}
 			if(MTR[i].pos.y>pos.y) {pos.y=MTR[i].pos.y;}
 		}
-		System.out.println(flg+"MAx:"+"x:"+pos.x+" "+"y:"+pos.y);
 		return pos;
 	}
 }
