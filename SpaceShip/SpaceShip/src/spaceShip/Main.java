@@ -19,6 +19,8 @@ public class Main {
 				sp=new Ship(ignorSpaces(sysin.nextLine()));
 				sp.getSpeed();
 				RD=new Radar(MTR, sp);
+				RD.getRadarData(0);
+				RD.getRadarView();
 				flg=false;
 			} catch (Exception e) {}
 		}
