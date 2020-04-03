@@ -8,6 +8,10 @@ public class Position {
 		this.x=x;
 		this.y=y;
 	}
+	public Position(Position p) {
+		this.x=p.x;
+		this.y=p.y;
+	}
 	public Position() {
 	}
 	public boolean isEqual(Position p) {

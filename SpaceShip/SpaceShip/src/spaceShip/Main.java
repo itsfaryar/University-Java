@@ -1,10 +1,23 @@
+/*test inputs
+ * test 1:
+
+6 (1,2)0.7_(2,1)2_(3,3)1.5_(4,1)0.2_(5,4)0.8_(6,2)0.5
+0-1_1-2_2-1_4-2
+
+ * test 2:
+
+4 (1,1)1_(2,3)1.5_(3,2)0.5_(4,4)1
+0-2_2-1_3-0.5
+
+///////////////////////
+ */
 package spaceShip;
 
 import java.util.Scanner;
 import spaceShip.Ship.ship_status;
 public class Main {
-	 //			 				6 (1,2)0.7_(2,1)2_(3,3)1.5_(4,1)0.2_(5,4)0.8_(6,2)0.5
-	private static Ship sp;//	0-1_1-2_2-1_4-2
+
+	private static Ship sp;
 	private static Scanner sysin=new Scanner(System.in);
 	public static void main(String[] args) {
 		double time=0;
@@ -22,7 +35,9 @@ public class Main {
 				RD.getRadarData(0);
 				RD.getRadarView();
 				flg=false;
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				System.err.println("There is something wrong about your inputs! Please Try Again");
+			}
 		}
 		while(true) {
 			System.out.println("+==============================+");

@@ -9,11 +9,12 @@ public class Radar {
 	private Ship sp;
 	private Position min_pos;
 	private Position max_pos;
-	double safe_point=-1;
+	private int last_meteorite_i;
 	public Radar(Meteorite[]MTR,Ship sp) {
 		this.MTR=MTR;
 		this.sp=sp;
-		safe_point=getSafePoint();
+		this.last_meteorite_i=getSafePoint();
+		
 		//this.radar_pos_calibrator=getMinPos();
 	}
 	public Meteorite[]getMeteorites(){
@@ -23,7 +24,10 @@ public class Radar {
 		return sp;
 	}
 	public void refreshShipStatus() {
-		if(sp.pos.x>safe_point)sp.state=ship_status.SAIFLY_PASSED;
+		//System.out.println("Safe Point: "+getCoordinate(MTR[last_meteorite_i].pos));
+		if((sp.pos.x>MTR[last_meteorite_i].pos.x) || (sp.pos.x==MTR[last_meteorite_i].pos.x && sp.pos.y>MTR[last_meteorite_i].pos.y)) {
+			sp.state=ship_status.SAIFLY_PASSED;
+		}
 		else {
 			for(int i=0;i<MTR.length;i++) {
 				if(MTR[i].pos.isEqual(sp.pos)) {
@@ -43,29 +47,31 @@ public class Radar {
 		return out;
 	}
 	public char[][] getRadarView() {
+		findAndSetMaxMin();
+		//System.out.println("max_pos:"+getCoordinate(max_pos));
+		//System.out.println("min_pos:"+getCoordinate(min_pos));
 		generateVirtualPositions();
-		this.min_pos=getMinPos();
-		this.max_pos=getMaxPos();
-		char[][] radar=new char[rondInt(max_pos.y+1)][rondInt(max_pos.x+1)];
+		char[][] radar=new char[rondInt((max_pos.y-min_pos.y)+1)][rondInt((max_pos.x)+1)];
 		for(int i=0;i<radar.length;i++) {
 			for(int j=0;j<radar[i].length;j++) {
 				radar[i][j]='.';
 			}
 		}
-		
 		for(int i=0;i<MTR.length;i++) {
-			if(MTR[i].virtual_pos.x>=0 && MTR[i].virtual_pos.y>=0) {
-				radar[rondInt(MTR[i].virtual_pos.y)][rondInt(MTR[i].virtual_pos.x)]='M';
-			}
+				radar[(int)(MTR[i].virtual_pos.y)][(int)(MTR[i].virtual_pos.x)]='M';
 		}
-		if(sp.virtual_pos.x>=0 && sp.virtual_pos.y>=0) {
 			if(sp.state==ship_status.CRASHED) {
-				radar[rondInt(sp.virtual_pos.y)][rondInt(sp.virtual_pos.x)]='X';
+				radar[(int)(sp.virtual_pos.y)][(int)(sp.virtual_pos.x)]='X';
 			}
 			else {
-				radar[rondInt(sp.virtual_pos.y)][rondInt(sp.virtual_pos.x)]='S';
+				if(radar[(int)(sp.virtual_pos.y)][(int)(sp.virtual_pos.x)]=='M') {
+					radar[(int)(sp.virtual_pos.y)][(int)(sp.virtual_pos.x)]='$';
+				}
+				else {
+					radar[(int)(sp.virtual_pos.y)][(int)(sp.virtual_pos.x)]='S';
+				}
+				
 			}
-		}
 		return radar;
 	
 	}
@@ -78,67 +84,35 @@ public class Radar {
 		return "("+f.format(p.x)+","+f.format(p.y)+")";
 	}
 	private int rondInt(double inp) {
-		return (int)(inp+0.5);
+		return (inp>=0)? (int)(inp+0.5):(int)(inp-0.5);
 	}
-	private void generateVirtualPositions() {
-		this.min_pos=getMinPos();
-		this.max_pos=getMaxPos();
-		/*sp.virtual_pos.x=sp.pos.x-min_pos.x;
-		sp.virtual_pos.y=(max_pos.y-min_pos.y)-sp.pos.y-min_pos.y;
-		System.out.println("x:"+sp.virtual_pos.x+" "+"y:"+sp.virtual_pos.y);
+	private void generateVirtualPositions()
+	{
+		sp.virtual_pos.x=rondInt(sp.pos.x);
+		sp.virtual_pos.y=rondInt(max_pos.y)-rondInt(sp.pos.y);
 		for(int i=0;i<MTR.length;i++) {
-			MTR[i].virtual_pos.x=MTR[i].pos.x-min_pos.x;
-			MTR[i].virtual_pos.y=(max_pos.y-min_pos.y)-MTR[i].pos.y-min_pos.y;
-		}*/
-		if(sp.pos.x>=0 &&sp.pos.y>=0) {
-			sp.virtual_pos.x=sp.pos.x;
-			sp.virtual_pos.y=(max_pos.y-sp.pos.y);
-		}
-		else {
-			sp.virtual_pos.x=-1;
-			sp.virtual_pos.y=-1;
-		}
-		for(int i=0;i<MTR.length;i++) {
-			if(MTR[i].pos.x>=0 && MTR[i].pos.y>=0) {
-				MTR[i].virtual_pos.x=MTR[i].pos.x;
-				MTR[i].virtual_pos.y=(max_pos.y-MTR[i].pos.y);
-			}
-			else {
-				MTR[i].virtual_pos.x=-1;
-				MTR[i].virtual_pos.y=-1;
-			}
+			MTR[i].virtual_pos.x=rondInt(MTR[i].pos.x);
+			MTR[i].virtual_pos.y=rondInt(max_pos.y)-rondInt(MTR[i].pos.y);
 		}
 	}
-	private double getSafePoint() {
-		double out=-1;
-		out=MTR[0].pos.x;
+	private int getSafePoint() {
+		int out=0;
 		for(int i=0;i<MTR.length;i++) {
-			if(MTR[i].pos.x>out) {
-				out=MTR[i].pos.x;
+			if(MTR[i].pos.x>MTR[out].pos.x) {
+				out=i;
 			}
 		}
 		return out;
 	}
-	private Position getMinPos() {
-		Position pos=new Position();
-		pos.y=sp.pos.y;
-		pos.x=sp.pos.x;
-		boolean flg=false;
+	private void findAndSetMaxMin() {
+		max_pos=new Position(sp.pos);
+		min_pos=new Position(sp.pos);
 		for(int i=0;i<MTR.length;i++) {
-			if(MTR[i].pos.x<pos.x) {pos.x=MTR[i].pos.x;}
-			if(MTR[i].pos.y<pos.y) {pos.y=MTR[i].pos.y;}
+			if(MTR[i].pos.x<min_pos.x) {min_pos.x=MTR[i].pos.x;}
+			if(MTR[i].pos.y<min_pos.y) {min_pos.y=MTR[i].pos.y;}
+			if(MTR[i].pos.x>max_pos.x) {max_pos.x=MTR[i].pos.x;}
+			if(MTR[i].pos.y>max_pos.y) {max_pos.y=MTR[i].pos.y;}
 		}
-		return pos;
 	}
-	private Position getMaxPos() {
-		Position pos=new Position();
-		pos.y=sp.pos.y;
-		pos.x=sp.pos.x;
-		boolean flg=false;
-		for(int i=0;i<MTR.length;i++) {
-			if(MTR[i].pos.x>pos.x) {pos.x=MTR[i].pos.x;}
-			if(MTR[i].pos.y>pos.y) {pos.y=MTR[i].pos.y;}
-		}
-		return pos;
-	}
+	
 }
