@@ -58,8 +58,11 @@ public class Radar {
 			}
 		}
 		for(int i=0;i<MTR.length;i++) {
+			if(MTR[i].virtual_pos.x>=0) {
 				radar[(int)(MTR[i].virtual_pos.y)][(int)(MTR[i].virtual_pos.x)]='M';
+			}
 		}
+		if(sp.virtual_pos.x>=0) {
 			if(sp.state==ship_status.CRASHED) {
 				radar[(int)(sp.virtual_pos.y)][(int)(sp.virtual_pos.x)]='X';
 			}
@@ -72,6 +75,7 @@ public class Radar {
 				}
 				
 			}
+		}
 		return radar;
 	
 	}

@@ -60,14 +60,14 @@ public class Main {
 		}
 	}
 	private static void showRadar(char[][]radar) {
-		System.out.println("--------------------");
+		System.out.println("====================");
 		for(int i=0;i<radar.length;i++) {
 			for(int j=0;j<radar[i].length;j++) {
 				System.out.print(radar[i][j]);
 			}
 			System.out.println();
 		}
-		System.out.println("--------------------");
+		System.out.println("====================");
 	}
 	@SuppressWarnings("unused")
 	private static void printMeteoriteValues(Meteorite[] MTR) {
