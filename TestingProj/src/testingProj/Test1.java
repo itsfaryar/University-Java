@@ -1,12 +1,12 @@
 package testingProj;
-
-public class Test1 {
-	private String h;
+import java.io.Serializable;
+public class Test1 implements Serializable {
+	private String h=new String();
 	public Test2 th;
-	public Test1(String n) {
+	public Test1(String n,Test2 th) {
 		this.setH(n);
-		this.th=new Test2();
-		th.ts=this;
+		this.th=th;
+		this.th.setTs1(this);
 	}
 	public String getH() {
 		return h;
