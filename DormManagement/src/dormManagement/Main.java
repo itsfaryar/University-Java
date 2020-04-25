@@ -74,6 +74,7 @@ public class Main {
 			System.out.print("Your password: ");
 			password=sysin.next();
 			management.addNewManager(name, usr_name, password);
+			saveObject(management);
 		}
 	}
 	public static void main(String[] args) {

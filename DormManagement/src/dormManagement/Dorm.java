@@ -1,7 +1,8 @@
 package dormManagement;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-public class Dorm {
+public class Dorm implements Serializable{
 	public enum types{FOR_BOYS,FOR_GIRLS}
 	private String name;
 	private types type;

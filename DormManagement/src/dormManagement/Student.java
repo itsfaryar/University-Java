@@ -1,6 +1,8 @@
 package dormManagement;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable{
 	private String name;
 	private String student_number;
 	private String studing_subject;

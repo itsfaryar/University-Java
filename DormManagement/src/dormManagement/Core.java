@@ -1,8 +1,9 @@
 package dormManagement;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Core {
+public class Core implements Serializable{
 	private ArrayList<Student>students;
 	private ArrayList<Manager>managers;
 	private ArrayList<Dorm>dorms;

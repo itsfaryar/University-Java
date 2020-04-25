@@ -1,6 +1,8 @@
 package dormManagement;
 
-public class Manager {
+import java.io.Serializable;
+
+public class Manager implements Serializable{
 	private String name;
 	private String usr_name;
 	private String password;
