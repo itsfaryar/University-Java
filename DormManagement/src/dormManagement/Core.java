@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Core implements Serializable{
+	private Manager logined_manager;
 	private ArrayList<Student>students;
 	private ArrayList<Manager>managers;
 	private ArrayList<Dorm>dorms;
@@ -11,6 +12,7 @@ public class Core implements Serializable{
 		students=new ArrayList<Student>();
 		managers=new ArrayList<Manager>();
 		dorms=new ArrayList<Dorm>();
+		logined_manager=null;
 	}
 	private boolean is_manager_usrname_duplicate(String usr_name) {
 		boolean res=false;
@@ -37,5 +39,21 @@ public class Core implements Serializable{
 			out+=managers.get(i).getName();
 		}
 		return out;
+	}
+	public boolean logIn(String usr_name,String password) {
+		boolean res=false;
+		for(int i=0;i<managers.size();i++) {
+			if(managers.get(i).checkUserName(usr_name)) {
+				if(managers.get(i).checkPass(password)) {
+					logined_manager=managers.get(i);
+					res=true;
+					break;
+				}
+			}
+		}
+		return res;
+	}
+	public void logOut() {
+		logined_manager=null;
 	}
 }
