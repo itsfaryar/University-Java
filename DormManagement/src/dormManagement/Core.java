@@ -14,10 +14,18 @@ public class Core implements Serializable{
 		dorms=new ArrayList<Dorm>();
 		logined_manager=null;
 	}
-	private boolean is_manager_usrname_duplicate(String usr_name) {
+	//////////////////////manager
+	public boolean is_logined() {
+		if(logined_manager==null)return false;
+		else return true;
+	}
+	public String getLoginedName() {
+		return logined_manager.getName();
+	}
+	private boolean is_managerUsrnameDuplicate(String usr_name) {
 		boolean res=false;
 		for(int i=0;i<managers.size();i++) {
-			if(managers.get(i).equals(usr_name)) {
+			if(managers.get(i).checkUserName(usr_name)) {
 				res=true;
 				break;
 			}
@@ -25,7 +33,7 @@ public class Core implements Serializable{
 		return res;
 	}
 	public boolean addNewManager(String name,String usr_name,String password) {
-		if(!is_manager_usrname_duplicate(usr_name)) {
+		if(!is_managerUsrnameDuplicate(usr_name)) {
 			managers.add(new Manager(name, usr_name, password));
 			return true;
 		}
@@ -55,5 +63,24 @@ public class Core implements Serializable{
 	}
 	public void logOut() {
 		logined_manager=null;
+	}
+	////////////////////////////////////////
+	//////////////////////////////Dorm
+	private boolean is_DormNameDuplicate(String usr_name) {
+		boolean res=false;
+		for(int i=0;i<managers.size();i++) {
+			if(managers.get(i).checkUserName(usr_name)) {
+				res=true;
+				break;
+			}
+		}
+		return res;
+	}
+	public boolean addDorm(String name,Dorm.types type) {
+		if(!is_DormNameDuplicate(name)) {
+			dorms.add(new Dorm(name, type));
+			return true;
+		}
+		else return false;
 	}
 }

@@ -53,29 +53,51 @@ public class Main {
 		} 
 		return obj;
 	}
-	private static void mainPage(Core management) {
-		System.out.println("Managers");
-		System.out.println(management.getManagersName());
-		System.out.println("======================");
+	private static void guestPage(Core management) {
+		System.out.println("\t\t\t======================");
+		System.out.println("\t\t\tManagers' name:");
+		System.out.println("\t\t\t"+management.getManagersName());
+		System.out.println("\t\t\t======================");
 		String name;
 		String usr_name;
 		String password;
 		System.out.println("\t\t\tPlease enter the number of options:");
 		System.out.println("\t\t\t1.Log in  |  2.Sign up");
 		char ans=sysin.next().charAt(0);
-		if(ans==1) {
-			
-		}
-		else {
-			System.out.print("Your name: ");
-			name=sysin.next();
-			System.out.print("Your user name: ");
+		if(ans=='1') {
+			System.out.print("\t\t\tYour user name: ");
 			usr_name=sysin.next();
-			System.out.print("Your password: ");
+			System.out.print("\t\t\tYour password: ");
 			password=sysin.next();
-			management.addNewManager(name, usr_name, password);
-			saveObject(management);
+			management.logIn(usr_name, password);
 		}
+		else if(ans=='2'){
+			System.out.print("\t\t\tYour name: ");
+			name=sysin.next();
+			System.out.print("\t\t\tYour user name: ");
+			usr_name=sysin.next();
+			System.out.print("\t\t\tYour password: ");
+			password=sysin.next();
+			if(management.addNewManager(name, usr_name, password)) {
+				saveObject(management);
+				System.out.println();
+				System.out.println("\t\t\tyour Acount has been Successfully created.");
+				System.out.println("\t\t\tanykey:Back login/signUp  |  2: Continue with this acount");
+				sysin.next().charAt(0);
+				if(ans=='2') {
+					management.logIn(usr_name, password);
+				}
+			}
+			else {
+				System.out.println();
+				System.out.println("\t\t\tSORRY!!!This username has been used before!!!");
+				System.out.println("\t\t\tanykey:Back login/signUp");
+				sysin.next();
+			}
+		}
+	}
+	private static void loginedPage(Core management) {
+		
 	}
 	public static void main(String[] args) {
 		Core management;
@@ -91,7 +113,12 @@ public class Main {
 		while(true) {
 			switch (state) {
 			case MAIN:
-				mainPage(management);
+				if(management.is_logined()) {
+					loginedPage(management);
+				}
+				else {
+					guestPage(management);
+				}
 				break;
 
 			}
