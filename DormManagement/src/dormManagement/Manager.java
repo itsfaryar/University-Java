@@ -27,5 +27,9 @@ public class Manager implements Serializable{
 		}
 		else return false;
 	}
+	public boolean setDorm(String key, Dorm inp) {
+		dorm=inp;
+		return dorm.setMngr(this, key);
+	}
 	
 }

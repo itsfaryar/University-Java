@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
+import dormManagement.Dorm.types;
+
 public class Main {
 	private static final String data_path="Data/data.SVD";
 	private static Scanner sysin=new Scanner(System.in);
@@ -56,7 +58,7 @@ public class Main {
 	private static void guestPage(Core management) {
 		System.out.println("\t\t\t======================");
 		System.out.println("\t\t\tManagers' name:");
-		System.out.println("\t\t\t"+management.getManagersName());
+		System.out.println("\t\t\t"+management.getManagerNames());
 		System.out.println("\t\t\t======================");
 		String name;
 		String usr_name;
@@ -97,7 +99,38 @@ public class Main {
 		}
 	}
 	private static void loginedPage(Core management) {
-		
+		String name=null;
+		Dorm.types type=null;
+		if(management.getLoginedManagerDorm()==null) {
+			System.out.println("You are not manager of any Dorm");
+			System.out.println("Choose one Dorm or add a new one");
+			System.out.println("0.add a new one");
+			System.out.println(management.getDormNames());
+			int ans=sysin.nextInt();
+			if(ans==0) {
+				System.out.println("please enter a name for new Dorm");
+				name=sysin.next();
+				System.out.println("please enter the type of this Dorm(1.For Boys 2.For Girls");
+				while(type!=null) {
+					char ch=sysin.next().charAt(0);
+					if(ch=='1') {
+						type=types.FOR_BOYS;
+					}
+					else if(ch=='2') {
+						type=types.FOR_GIRLS;
+					}
+				}
+				management.addDorm(name, type);
+			}
+			else {
+				String key=null;
+				if(management.is_dormLocked(ans-1)) {
+					System.out.println("Please enter authorizing key");
+					key=sysin.next();
+				}
+				management.setDorm(ans-1, key);
+			}
+		}
 	}
 	public static void main(String[] args) {
 		Core management;

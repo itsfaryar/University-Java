@@ -41,12 +41,18 @@ public class Core implements Serializable{
 			return false;
 		}
 	}
-	public String getManagersName() {
+	public String getManagerNames() {
 		String out=new String();
 		for(int i=0;i<managers.size();i++,out+="\n") {
 			out+=managers.get(i).getName();
 		}
 		return out;
+	}
+	public String getLoginedManagerDorm() {
+		return logined_manager.getName();
+	}
+	public boolean setDorm(int index,String key) {
+		return logined_manager.setDorm(key,dorms.get(index));
 	}
 	public boolean logIn(String usr_name,String password) {
 		boolean res=false;
@@ -66,6 +72,19 @@ public class Core implements Serializable{
 	}
 	////////////////////////////////////////
 	//////////////////////////////Dorm
+	public boolean is_dormLocked(int index) {
+		return dorms.get(index).is_locked();
+	}
+	public int getDormsSize() {
+		return dorms.size();
+	}
+	public String getDormNames() {
+		String out=new String();
+		for(int i=0;i<dorms.size();i++,out+="\n") {
+			out+=(i+1)+"."+dorms.get(i).getName();
+		}
+		return out;
+	}
 	private boolean is_DormNameDuplicate(String usr_name) {
 		boolean res=false;
 		for(int i=0;i<managers.size();i++) {
