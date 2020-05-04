@@ -80,7 +80,57 @@ public class Main {
 		saveObject(management);
 		if(logined)management.logIn(temp_usr, temp_pass);
 	}
-	private static void editStudentInfoPage() {
+	private static void editStudentInfoPage(Core management) {
+		System.out.println("Please enter student number to edit info");
+		String stdnumber=sysin.next();
+		int index=management.getLoginedManager().searchStudentByStdNumber(stdnumber);
+		if(index==-1) {
+			System.out.println("Student not Found!!! Enter anything to back to menu.");
+			return ;
+		}
+		Student std=management.getLoginedManager().getStudent(index);
+		String std_name=std.getName();
+		String std_subject=std.getStuding_subject();
+		String std_entrance=std.getYear_of_entrance();
+		int std_debt=std.getDebt();
+		loop:while(true) {
+			System.out.println("\t\t1.Name            :"+std_name);
+			System.out.println("\t\t2.Student Subject :"+std_subject);
+			System.out.println("\t\t3.year of entrance:"+std_entrance);
+			System.out.println("\t\t4.debt            :"+std_debt);
+			System.out.println("\t\tS:save and exit\tQ:Exit without saving");
+			System.out.print("\t\tchoose: ");
+			char ans=uppercase(sysin.next().charAt(0));
+			switch (ans) {
+			case '1':
+				System.out.print("\t\tName: ");
+				std_name=sysin.next();
+				break;
+			case '2':
+				System.out.print("\t\tStudent Subject :");
+				std_subject=sysin.next();
+				break;
+			case '3':
+				System.out.print("\t\tyear of entrance: ");
+				std_entrance=sysin.next();
+				break;
+			case '4':
+				System.out.print("\t\tdebt: ");
+				try {
+					std_debt=sysin.nextInt();
+				} catch (Exception e) {}
+				break;
+			case 'S':
+				management.getLoginedManager().editStudent(std, std_name, std_subject, std_entrance, std_debt);
+				safeSave(management);
+				break loop;
+			case 'Q':
+				break loop;
+			default:
+				break;
+			}
+			
+		}
 		
 	}
 	private static void guestPage(Core management) {
@@ -183,27 +233,30 @@ public class Main {
 			System.out.println("4.edit student info\t2.add new student\t3.Remove student");
 			String ans=upperCase(sysin.next());
 			if(ans.equals("G")) {
-				boolean done=false;
-				while(!done) {
-					System.out.println("\t\t\tDo you want to lock the Dorm first?(y/n)");
-					char ch=uppercase(sysin.next().charAt(0));
-					if(ch=='Y') {
-						System.out.println("Copy this code and keep it safa to sign in to this Dorm.");
-						System.out.println();
-						System.out.println(management.unsetDorm(true));
-						System.out.println();
-						done=true;
-					}
-					else if(ch=='N') {
-						management.unsetDorm(false);
-						System.out.println("Signedout succesfully.");
-						done=true;
-					}
-				}	
-				safeSave(management);
+				
 			}
 			else {
 				switch (ans) {
+				case "G":
+					boolean done=false;
+					while(!done) {
+						System.out.println("\t\t\tDo you want to lock the Dorm first?(y/n)");
+						char ch=uppercase(sysin.next().charAt(0));
+						if(ch=='Y') {
+							System.out.println("Copy this code and keep it safa to sign in to this Dorm.");
+							System.out.println();
+							System.out.println(management.unsetDorm(true));
+							System.out.println();
+							done=true;
+						}
+						else if(ch=='N') {
+							management.unsetDorm(false);
+							System.out.println("Signedout succesfully.");
+							done=true;
+						}
+					}	
+					safeSave(management);
+					break;
 				case "L":
 					management.logOut();
 					break;
@@ -246,7 +299,7 @@ public class Main {
 					}
 					break;
 				case "4":
-					
+					editStudentInfoPage(management);
 					break;
 				default:
 					break;

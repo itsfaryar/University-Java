@@ -66,21 +66,46 @@ public class Manager implements Serializable{
 		}
 		return out;
 	}
-	
-	public Student searchStudentByStdNumber(String stdnumber) {
-		Student out=null;
+	public Student getStudent(int index) {
+		return dorm.getStudents().get(index);
+	}
+	public int searchStudentByStdNumber(String stdnumber) {
+		int index=-1;
 		for(int i=0;i<dorm.getStudents().size();i++) {
 			if(dorm.getStudents().get(i).getStudenNumber().equals(stdnumber)) {
-				out=dorm.getStudents().get(i);
+				index=i;
 				break;
 			}
 		}
-		return out;
+		return index;
 	}
 	public boolean eraseStudent(Student std) {
 		return dorm.getStudents().remove(std);
 	}
 	public boolean eraseStudent(String stdnumber) {
-		return dorm.getStudents().remove(searchStudentByStdNumber(stdnumber));
+		int index=searchStudentByStdNumber(stdnumber);
+		if(index==-1) {
+			return false;
+		}
+		else{
+			dorm.getStudents().remove(index);
+			return true;
+		}
+	}
+	public boolean editStudent(Student std,String new_name,String new_studing_subject,String new_year_of_entrance,int new_debt) {
+		int index=dorm.getStudents().indexOf(std);
+		if(index==-1) return false;
+		else {
+			dorm.getStudents().get(index).editInfo(new_name,new_studing_subject, new_year_of_entrance, new_debt);
+			return true;
+		}
+	}
+	public boolean editStudent(String stdnumber,String new_name,String new_studing_subject,String new_year_of_entrance,int new_debt) {
+		int index=searchStudentByStdNumber(stdnumber);
+		if(index==-1) return false;
+		else {
+			dorm.getStudents().get(index).editInfo(new_name, new_studing_subject, new_year_of_entrance, new_debt);
+			return true;
+		}
 	}
 }

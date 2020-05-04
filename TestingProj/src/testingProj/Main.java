@@ -8,24 +8,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
+	private static Scanner sysin=new Scanner(System.in);
 	public static void main(String[] args) {
-		INT newint=new INT(1234);
-		INT newint2=new INT(5678);
-		ArrayList<INT>v=new ArrayList<INT>();
-		v.add(new INT(1));
-		v.add(new INT(2));
-		v.add(newint);
-		
-		
-		
-		System.out.println(v.indexOf(newint2));
-		//System.out.println(v.get(2).x);
-		for(int i=0;i<v.size();i++) {
-			System.out.println(v.get(i).x);
-		}
-		
+		Test1 ts=new Test1("hello");
+		String st=ts.getH();
+		st=sysin.next();
+		System.out.println(ts.getH());
 		
 	}
 	private static void saveObject(String object_name,Object obj) {
