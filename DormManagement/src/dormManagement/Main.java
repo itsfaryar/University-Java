@@ -80,6 +80,9 @@ public class Main {
 		saveObject(management);
 		if(logined)management.logIn(temp_usr, temp_pass);
 	}
+	private static void editStudentInfoPage() {
+		
+	}
 	private static void guestPage(Core management) {
 		System.out.println("\t\t\t======================");
 		System.out.println("\t\t\tManagers' name:");
@@ -177,6 +180,7 @@ public class Main {
 			System.out.println("\t\tL: Logout from your account.");
 			System.out.println();
 			System.out.println("1.Show all students\t2.add new student\t3.Remove student");
+			System.out.println("4.edit student info\t2.add new student\t3.Remove student");
 			String ans=upperCase(sysin.next());
 			if(ans.equals("G")) {
 				boolean done=false;
