@@ -4,23 +4,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Core implements Serializable{
-	private Manager logined_manager;
-	private ArrayList<Student>students;
-	private ArrayList<Manager>managers;
-	private ArrayList<Dorm>dorms;
+	private Manager logined_manager=null;
+	
+	private ArrayList<Manager>managers=null;
+	private ArrayList<Dorm>dorms=null;
 	public Core() {
-		students=new ArrayList<Student>();
 		managers=new ArrayList<Manager>();
 		dorms=new ArrayList<Dorm>();
 		logined_manager=null;
 	}
+
 	//////////////////////manager
 	public boolean is_logined() {
 		if(logined_manager==null)return false;
 		else return true;
 	}
-	public String getLoginedName() {
-		return logined_manager.getName();
+	public Manager getLoginedManager() {
+		return logined_manager;
 	}
 	private boolean is_managerUsrnameDuplicate(String usr_name) {
 		boolean res=false;
@@ -49,10 +49,14 @@ public class Core implements Serializable{
 		return out;
 	}
 	public String getLoginedManagerDorm() {
-		return logined_manager.getName();
+		if(logined_manager.getDorm()==null)return null;
+		else return logined_manager.getDorm().getName();
 	}
 	public boolean setDorm(int index,String key) {
 		return logined_manager.setDorm(key,dorms.get(index));
+	}
+	public String unsetDorm(boolean lock) {
+		return logined_manager.unsetDorm(lock);
 	}
 	public boolean logIn(String usr_name,String password) {
 		boolean res=false;

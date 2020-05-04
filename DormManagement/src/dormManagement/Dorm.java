@@ -11,11 +11,16 @@ public class Dorm implements Serializable{
 	private int count_of_blocks=-1;
 	private Manager mngr;
 	private ArrayList<Block> blocks;
+	private ArrayList<Student>students=null;
 	public Dorm(String name,types type) {
 		this.name=name;
 		this.type=type;
+		students=new ArrayList<Student>();
 		this.blocks=new ArrayList<Block>();
 		count_of_blocks=blocks.size();
+	}
+	public ArrayList<Student> getStudents() {
+		return students;
 	}
 	public String getName() {
 		return name;
@@ -29,12 +34,18 @@ public class Dorm implements Serializable{
 			return true;
 		}
 		else if(authorize_key.equals(key)) {
+			authorize_key=null;
 			this.mngr = mngr;
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+	public String unsetMngr(Boolean lock) {
+		mngr=null;
+		if(lock) return getAuthorizeKey(12);
+		else return null;
 	}
 	public int getCount_of_blocks() {
 		return count_of_blocks;
@@ -61,18 +72,9 @@ public class Dorm implements Serializable{
 		}
 		return key;
 	}
-	public String getAuthorizeKey(String old_key,int len) {
-		if(authorize_key==null) {
-			authorize_key=generateKey(len);
-			return authorize_key;
-		}
-		else if(authorize_key.equals(old_key)) {
-			authorize_key=generateKey(len);
-			return authorize_key;
-		}
-		else {
-			return null;
-		}
+	public String getAuthorizeKey(int len) {
+		authorize_key=generateKey(len);
+		return authorize_key;
 	}
 	private boolean is_Duplicate(String inp) {
 		boolean res=false;

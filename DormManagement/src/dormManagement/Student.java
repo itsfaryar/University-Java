@@ -18,6 +18,9 @@ public class Student implements Serializable{
 		this.debt=debt;
 		
 	}
+	public String getStudenNumber() {
+		return student_number;
+	}
 	public Room getRoom() {
 		return room;
 	}
@@ -35,5 +38,18 @@ public class Student implements Serializable{
 		if(new_student_number!=null)this.student_number=new_student_number;
 		if(new_studing_subject!=null)this.studing_subject=new_studing_subject;
 		if(new_year_of_entrance!=null)this.year_of_entrance=new_year_of_entrance;
+	}
+	public String toString() {
+		String out=new String();
+		out+=name+" | ";
+		out+=student_number+" | ";
+		out+=studing_subject+" | ";
+		out+=year_of_entrance+" | ";
+		if(room==null) {
+			out+="RoomNumber:--"+"     ";
+		}
+		else out+="RoomNumber:"+room.getNumber()+"     ";
+		out+="debt:"+debt+"     ";
+		return out;
 	}
 }
