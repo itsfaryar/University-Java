@@ -94,6 +94,7 @@ public class Main {
 		String std_entrance=std.getYear_of_entrance();
 		int std_debt=std.getDebt();
 		loop:while(true) {
+			System.out.println("\t\t===================");
 			System.out.println("\t\t1.Name            :"+std_name);
 			System.out.println("\t\t2.Student Subject :"+std_subject);
 			System.out.println("\t\t3.year of entrance:"+std_entrance);
