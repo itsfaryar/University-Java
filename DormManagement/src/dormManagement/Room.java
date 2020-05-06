@@ -12,7 +12,6 @@ public class Room implements Serializable{
 	private int capacity;
 	private int floor_number;
 	private int rent_price;
-	private Student std;
 	private ArrayList<Student>students;
 	private Student room_supervisor;
 	private Block block; 
@@ -54,10 +53,13 @@ public class Room implements Serializable{
 	public Student getRoom_supervisor() {
 		return room_supervisor;
 	}
-	public void setRoom_supervisor(Student room_supervisor) {
-		this.room_supervisor = room_supervisor;
+	public void setRoom_supervisor(int index) {
+		this.room_supervisor = students.get(index);
 	}
-	public void getRents() {
+	public ArrayList<Student>getStudents(){
+		return students;
+	}
+	public void takeRents() {
 		for(int i=0;i<students.size();i++) {
 			students.get(i).increaseDebt(rent_price);
 		}
@@ -85,6 +87,13 @@ public class Room implements Serializable{
 		else {
 			return false;
 		}
+	}
+	public void removeAllStudent() {
+		for(int i=0;i<students.size();i++) {
+			students.get(i).setRoom(null);
+			capacity++;
+		}
+		students=new ArrayList<Student>();
 	}
 	
 	

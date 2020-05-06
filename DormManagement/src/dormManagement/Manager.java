@@ -65,8 +65,9 @@ public class Manager implements Serializable{
 	}
 	public String Students_toString() {
 		String out=new String();
+		out+="Count of Students: "+dorm.getStudents().size()+"\n";
 		for(int i=0;i<dorm.getStudents().size();i++,out+='\n') {
-			out+=dorm.getStudents().toString();
+			out+=dorm.getStudents().get(i).toString();
 		}
 		return out;
 	}
@@ -133,10 +134,120 @@ public class Manager implements Serializable{
 		if(block!=null) {
 			Room room=block.getRoomAtNumber(room_num);
 			if(room!=null) {
-				std.getRoom().removeStudent(std);
+				if(std.getRoom()!=null)std.getRoom().removeStudent(std);
 				room.addStudent(std);
 				res=true;
 			}
+		}
+		return res;
+	}
+	public String roomMates_toString(Student std) {
+		String out=new String("--");
+		if(std!=null) {
+			if(std.getRoom()!=null) {
+				Room room=std.getRoom();
+				out=new String();
+				int index=room.getStudents().indexOf(std);
+				for(int i=0;i<room.getStudents().size();i++) {
+					if(i!=index) {
+						out+=room.getStudents().get(i).getName()+"("+room.getStudents().get(i).getStudenNumber()+")";
+						if((i>1)&&((i%4)==0))out+="\n";
+						else out+="\t";
+					}
+				}
+			}
+		}
+		return out;
+	}
+	public String roomMembers_toString(String block_num,String room_num) {
+		String out=new String("--");
+		Block block=dorm.getBlockAtNumber(block_num);
+		if(block!=null) {
+			Room room=block.getRoomAtNumber(room_num);
+			if(room!=null) {
+				if(room.getStudents()!=null) {
+					out=new String();
+					for(int i=0;i<room.getStudents().size();i++) {
+						out+=(i+1)+"."+room.getStudents().get(i).getName()+"("+room.getStudents().get(i).getStudenNumber()+")";
+						if((i>1)&&((i%4)==0))out+="\n";
+						else out+="\t";
+					}
+				}
+			}
+		}
+		return out;
+	}
+	public boolean removeAllMembersFromRoom(String block_num,String room_num) {
+		boolean res=false;
+		Block block=dorm.getBlockAtNumber(block_num);
+		if(block!=null) {
+			Room room=block.getRoomAtNumber(room_num);
+			if(room!=null) {
+				room.removeAllStudent();
+				res=true;
+			}
+		}
+		return res;
+		
+	}
+	public void removeAllStudentsFromDorm() {
+		for(int i=0;i<dorm.getBlocks().size();i++) {
+			Block block=dorm.getBlocks().get(i);
+			for(int j=0;j<block.getRooms().size();j++) {
+				Room room=block.getRooms().get(j);
+				room.removeAllStudent();
+			}
+		}
+	}
+	public String getSupervisorForRoom(String block_num,String room_num) {
+		String out=new String("--");
+		Block block=dorm.getBlockAtNumber(block_num);
+		if(block!=null) {
+			Room room=block.getRoomAtNumber(room_num);
+			if(room!=null) {
+				if(room.getRoom_supervisor()!=null) {
+					out=room.getRoom_supervisor().toString();
+			
+				}
+			}
+		}
+		return out;
+	}
+	public boolean setSupervisorForRoom(String block_num,String room_num,int index) {
+		boolean res=false;
+		Block block=dorm.getBlockAtNumber(block_num);
+		if(block!=null) {
+			Room room=block.getRoomAtNumber(room_num);
+			if(room!=null && index>=0 && index<room.getStudents().size()) {
+				room.setRoom_supervisor(index);
+				res=true;
+			}
+		}
+		return res;
+	}
+	public boolean getRents(boolean rent_for_all,String block_num,String room_num) {
+		boolean res=false;
+		if(rent_for_all) {
+			for(int i=0;i<dorm.getBlocks().size();i++) {
+				Block block=dorm.getBlocks().get(i);
+				for(int j=0;j<block.getRooms().size();j++) {
+					Room room=block.getRooms().get(j);
+					room.takeRents();
+				}
+			}
+			res=true;
+		}
+		else {
+			
+			Block block=dorm.getBlockAtNumber(block_num);
+			if(block!=null) {
+				Room room=block.getRoomAtNumber(room_num);
+				if(room!=null) {
+					room.takeRents();
+					res=true;
+				}
+			}
+			
 		}
 		return res;
 	}

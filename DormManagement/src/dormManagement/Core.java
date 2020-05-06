@@ -120,7 +120,4 @@ public class Core implements Serializable{
 		}
 		else return false;
 	}
-///////Dorm builder
-	
-//////////////////////
 }

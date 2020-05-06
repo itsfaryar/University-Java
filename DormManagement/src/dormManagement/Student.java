@@ -57,6 +57,7 @@ public class Student implements Serializable{
 	}
 	public String toString() {
 		String out=new String();
+		out+="[ ";
 		out+=name+" | ";
 		out+=student_number+" | ";
 		out+=studing_subject+" | ";
@@ -66,6 +67,7 @@ public class Student implements Serializable{
 		}
 		else out+="RoomNumber:"+room.getNumber()+"     ";
 		out+="debt:"+debt+"     ";
+		out+=" ]";
 		return out;
 	}
 }

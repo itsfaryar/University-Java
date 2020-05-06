@@ -81,15 +81,101 @@ public class Main {
 		saveObject(management);
 		if(logined)management.logIn(temp_usr, temp_pass);
 	}
+	private static void signoutFromDormPage(Core management) {
+		boolean done=false;
+		while(!done) {
+			System.out.println("\t\t\tDo you want to lock the Dorm first?(y/n)");
+			char ch=uppercase(sysin.next().charAt(0));
+			if(ch=='Y') {
+				System.out.println("Copy this code and keep it safa to sign in to this Dorm.");
+				System.out.println();
+				System.out.println(management.unsetDorm(true));
+				System.out.println();
+				done=true;
+			}
+			else if(ch=='N') {
+				management.unsetDorm(false);
+				System.out.println("Signedout succesfully.");
+				done=true;
+			}
+		}	
+		safeSave(management);
+	}
 	private static void unchooseStudent(boolean condition) {
 		if(condition)std_chosen=null;
+	}
+	private static void choose_unchooseStudent(Core management) {
+		boolean unchoose_con=true;
+		while(std_chosen==null) {
+			unchoose_con=false;
+			System.out.println("Please enter student number or C to cancel");
+			String stdnumber=sysin.next();
+			if(stdnumber.charAt(0)=='C'||stdnumber.charAt(0)=='c')return;
+			std_chosen=management.findChosenStd(stdnumber);
+		}
+		unchooseStudent(unchoose_con);
+	}
+	private static void showAllStudentsPage(Core management) {
+		System.out.println(management.getLoginedManager().Students_toString());
+		System.out.println("enter anything to continue.");
+		sysin.next();
+	}
+	private static void addStudentPage(Core management) {
+		try {
+			System.out.println("-----------");
+			System.out.print("Name: ");
+			String name=sysin.next();
+			System.out.print("student number: ");
+			String student_number=sysin.next();
+			System.out.print("studing subject: ");
+			String studing_subject=sysin.next();
+			System.out.print("year of entrance: ");
+			String year_of_entrance=sysin.next();
+			System.out.print("pre debt: ");
+			int debt=sysin.nextInt();
+			System.out.println("-----------");
+			management.getLoginedManager().addNewStudent(name, student_number, studing_subject, year_of_entrance, debt);
+		}catch (Exception e) {
+			System.out.println("Faild!!!Wrong input Format.(Enter anything to continue...)");
+			sysin.next();
+			return;
+		}
+		safeSave(management);
+	}
+	private static void removeStudentPage(Core management) {
+		System.out.println("-----------");
+		while(std_chosen==null) {
+			System.out.println("Please enter student number or C to cancel");
+			String stdnumber=sysin.next();
+			if(stdnumber.charAt(0)=='C'||stdnumber.charAt(0)=='c')return;
+			std_chosen=management.findChosenStd(stdnumber);
+		}
+		System.out.println("Do you want to remove Student \""+std_chosen.getName()+"\"(y to continue | enter anything to cancel");
+		char ch=sysin.next().charAt(0);
+		if(ch=='y') {
+			if(management.getLoginedManager().eraseStudent(std_chosen)) {
+				System.out.println("removed succesfully.");
+				safeSave(management);
+				System.out.println("enter anything to continue.");
+				sysin.next();
+			}
+			else {
+				System.out.println("Student not found!!!");
+				System.out.println("enter anything to continue.");
+				sysin.next();
+			}
+		}
+		else {
+			return;
+		}
+		unchooseStudent(true);
 	}
 	private static void editStudentInfoPage(Core management) {
 		String stdnumber=null;
 		boolean temperary_choose=false;
 		while(std_chosen==null) {
 			temperary_choose=true;
-			System.out.println("Please enter student number to edit info or C to cancel");
+			System.out.println("Please enter student number or C to cancel");
 			stdnumber=sysin.next();
 			if(stdnumber.charAt(0)=='C'||stdnumber.charAt(0)=='c')return;
 			std_chosen=management.findChosenStd(stdnumber);
@@ -144,7 +230,7 @@ public class Main {
 		boolean temperary_choose=false;
 		while(std_chosen==null) {
 			temperary_choose=true;
-			System.out.println("Please enter student number to edit info or C to cancel");
+			System.out.println("Please enter student number or C to cancel");
 			stdnumber=sysin.next();
 			if(stdnumber.charAt(0)=='C'||stdnumber.charAt(0)=='c')return;
 			std_chosen=management.findChosenStd(stdnumber);
@@ -170,12 +256,115 @@ public class Main {
 			}
 		}
 		unchooseStudent(temperary_choose);
+		safeSave(management);
+	}
+	private static void showRoomMatesPage(Core management){
+		String stdnumber=null;
+		boolean temperary_choose=false;
+		while(std_chosen==null) {
+			temperary_choose=true;
+			System.out.println("Please enter student number or C to cancel");
+			stdnumber=sysin.next();
+			if(stdnumber.charAt(0)=='C'||stdnumber.charAt(0)=='c')return;
+			std_chosen=management.findChosenStd(stdnumber);
+		}
+		System.out.println(management.getLoginedManager().roomMates_toString(std_chosen));
+		System.out.println("Enter anything to continue...");
+		sysin.next();
+		unchooseStudent(temperary_choose);
+	}
+	private static void showRoomMembersPage(Core management){
+		System.out.print("Enter Block Number: ");
+		String block_num=sysin.next();
+		System.out.print("Enter Room Number: ");
+		String room_num=sysin.next();
+		System.out.println(management.getLoginedManager().roomMembers_toString(block_num, room_num));
+		System.out.println("Enter anything to continue...");
+		sysin.next();
+	}
+	private static void removeAllMembersFromRoomPage(Core management) {
+		System.out.print("Enter Block Number: ");
+		String block_num=sysin.next();
+		System.out.print("Enter Room Number: ");
+		String room_num=sysin.next();
+		System.out.println("Are you sure?(y to continue / Enter anything else to exit)");
+		char ans=uppercase(sysin.next().charAt(0));
+		if(ans=='Y') {
+			if(management.getLoginedManager().removeAllMembersFromRoom(block_num, room_num)) {
+				System.out.println("succesfully done!");
+				safeSave(management);
+			}
+			else System.err.println("Failed!Room cannot be found!");
+			System.out.println("Enter anything to continue...");
+			sysin.next();
+		}
+	}
+	private static void removeAllStudentsFromDormPage(Core management) {
+		System.out.println("Are you sure?(y to continue / Enter anything else to exit)");
+		char ans=uppercase(sysin.next().charAt(0));
+		if(ans=='Y') {
+			management.getLoginedManager().removeAllStudentsFromDorm();
+			System.out.println("succesfully done!");
+			safeSave(management);
+			System.out.println("Enter anything to continue...");
+			sysin.next();
+		}
+	}
+	private static void chooseRoomSupervisorPage(Core management) {
+		System.out.print("Enter Block Number: ");
+		String block_num=sysin.next();
+		System.out.print("Enter Room Number: ");
+		String room_num=sysin.next();
+		System.out.println("pre supervisor: "+management.getLoginedManager().getSupervisorForRoom(block_num, room_num));
+		System.out.println("Room members:");
+		System.out.println("-------------");
+		System.out.println(management.getLoginedManager().roomMembers_toString(block_num, room_num));
+		System.out.println("-------------");
+		int index=-1;
+		try {
+			System.out.println("choose a student with number: ");
+			index=Integer.parseInt(sysin.next());
+		}catch (Exception e) {}
+		if(management.getLoginedManager().setSupervisorForRoom(block_num, room_num, (index-1))) {
+			System.out.println("succesfully done.");
+			safeSave(management);
+		}
+		else System.err.println("Failed!!!some input data are wrong");
+		System.out.println("Enter anything to continue...");
+		sysin.next();
+	}
+	private static void getRentsPage(Core management) {
+		char ch_ans;
+		System.out.println("1.take rent from all rooms 2.choose a room to take rents");
+		ch_ans=sysin.next().charAt(0);
+		if(ch_ans=='1') {
+			management.getLoginedManager().getRents(true, null, null);
+			System.out.println("succesfully done.");
+			safeSave(management);
+		}
+		else if(ch_ans=='2') {
+			System.out.print("Enter Block Number: ");
+			String block_num=sysin.next();
+			System.out.print("Enter Room Number: ");
+			String room_num=sysin.next();
+			if(management.getLoginedManager().getRents(false, block_num, room_num)) {
+				System.out.println("succesfully done.");
+				safeSave(management);
+			}
+			else {
+				System.err.println("Failed!!!Some Inputs Are Wrong.");
+			}
+		}
+		System.out.println("Enter anything to continue...");
+		sysin.next();
 	}
 	private static boolean roomBuilder(String room_num,Block block) {
 		Room room=block.getRoomAtNumber(room_num);
 		if(room==null)return false;
 		while(true) {
-			System.out.println("Number: "+room.getNumber()+"\tFloor Number: "+room.getFloor_number()+"\tRoom's Block: "+block.getNumber());
+			String supervisor=new String("--");
+			if(room.getRoom_supervisor()!=null)supervisor=room.getRoom_supervisor().getName();
+			System.out.println("Number: "+room.getNumber()+"\tFloor Number: "+room.getFloor_number()+"\tRoom's Block: "+block.getNumber()+"\tRoom's Supervisor name: "+supervisor);
 			System.out.println("1.Capacity: "+room.getCapacity());
 			System.out.println("2.Rent Price: "+room.getRent_price());
 			System.out.println("B: exit from this Room Q: save and exit from Dorm Builder");
@@ -304,6 +493,7 @@ public class Main {
 				}
 			}
 		}
+		safeSave(management);
 		
 	}
 	private static void showAllFreeRooms(Core management) {
@@ -402,10 +592,9 @@ public class Main {
 		}
 		else {
 			System.out.println("=================");
-			System.out.println("\n\t\t\tYou are Manager of Dorm: "+management.getLoginedManagerDorm());
+			System.out.println("\n\t\t\tYou are Manager of Dorm: "+management.getLoginedManagerDorm().getName());
 			System.out.println();
-			System.out.println("\t\tG: sign out from this Dorm.");
-			System.out.println("\t\tL: Logout from your account.");
+			System.out.println("\tG: sign out from this Dorm.\tL: Logout from your account.\tQ: Exit");
 			if(std_chosen==null)System.out.println("\t0.choose student\t1.Show all students");
 			else {
 				System.out.println("\t"+std_chosen.toString());
@@ -415,7 +604,7 @@ public class Main {
 			System.out.println(" 2.add new student          3.Remove student                 4.edit student info");
 			System.out.println(" 5.Choose room for student  6.Show student's roommates       7.Show all free rooms");
 			System.out.println(" 8.Show room members        9.Remove all members from room  10.remove all members from all rooms");
-			System.out.println("11.Dorm builder");
+			System.out.println("11.Dorm builder            12.Room Supervisor               13.Get rents");
 			String ans=upperCase(sysin.next());
 			if(ans.equals("G")) {
 				
@@ -423,111 +612,56 @@ public class Main {
 			else {
 				switch (ans) {
 				case "G":
-					boolean done=false;
-					while(!done) {
-						System.out.println("\t\t\tDo you want to lock the Dorm first?(y/n)");
-						char ch=uppercase(sysin.next().charAt(0));
-						if(ch=='Y') {
-							System.out.println("Copy this code and keep it safa to sign in to this Dorm.");
-							System.out.println();
-							System.out.println(management.unsetDorm(true));
-							System.out.println();
-							done=true;
-						}
-						else if(ch=='N') {
-							management.unsetDorm(false);
-							System.out.println("Signedout succesfully.");
-							done=true;
-						}
-					}	
-					safeSave(management);
+					signoutFromDormPage(management);
 					break;
 				case "L":
 					management.logOut();
 					break;
+				case "Q":
+					state=situation.EXIT;
+					safeSave(management);
+					break;
 				case "0":
-					boolean unchoose_con=true;
-					while(std_chosen==null) {
-						unchoose_con=false;
-						System.out.println("Please enter valid student number to edit info or C to cancel");
-						String stdnumber=sysin.next();
-						if(stdnumber.charAt(0)=='C'||stdnumber.charAt(0)=='c')return;
-						std_chosen=management.findChosenStd(stdnumber);
-					}
-					unchooseStudent(unchoose_con);
+					choose_unchooseStudent(management);
 					break;
 				case "1":
-					System.out.println(management.getLoginedManager().Students_toString());
-					System.out.println("enter anything to continue.");
-					sysin.next();
+					showAllStudentsPage(management);
 					break;
 				case "2":
-					try {
-						System.out.println("-----------");
-						System.out.print("Name: ");
-						String name=sysin.next();
-						System.out.print("student number: ");
-						String student_number=sysin.next();
-						System.out.print("studing subject: ");
-						String studing_subject=sysin.next();
-						System.out.print("year of entrance: ");
-						String year_of_entrance=sysin.next();
-						System.out.print("pre debt: ");
-						int debt=sysin.nextInt();
-						System.out.println("-----------");
-						management.getLoginedManager().addNewStudent(name, student_number, studing_subject, year_of_entrance, debt);
-					}catch (Exception e) {}
-					safeSave(management);
+					addStudentPage(management);
 					break;
 				case "3":
-					System.out.println("-----------");
-					while(std_chosen==null) {
-						System.out.println("Please enter valid student number to edit info or C to cancel");
-						String stdnumber=sysin.next();
-						if(stdnumber.charAt(0)=='C'||stdnumber.charAt(0)=='c')return;
-						std_chosen=management.findChosenStd(stdnumber);
-					}
-					System.out.println("Do you want to remove Student \""+std_chosen.getName()+"\"(y to continue | enter anything to cancel");
-					char ch=sysin.next().charAt(0);
-					if(ch=='y') {
-						if(management.getLoginedManager().eraseStudent(std_chosen)) {
-							System.out.println("removed succesfully.");
-							System.out.println("enter anything to continue.");
-							sysin.next();
-						}
-						else {
-							System.out.println("Student not found!!!");
-							System.out.println("enter anything to continue.");
-							sysin.next();
-						}
-					}
-					else {
-						return;
-					}
-					unchooseStudent(true);
-					safeSave(management);
+					removeStudentPage(management);
 					break;
 				case "4":
 					editStudentInfoPage(management);
 					break;
 				case "5":
 					chooseRoomPage(management);
-					safeSave(management);
 					break;
 				case "6":
+					showRoomMatesPage(management);
 					break;
 				case "7":
 					showAllFreeRooms(management);
 					break;
 				case "8":
+					showRoomMembersPage(management);
 					break;
 				case "9":
+					removeAllMembersFromRoomPage(management);
 					break;
 				case "10":
+					removeAllStudentsFromDormPage(management);
 					break;
 				case "11":
 					dormBuilder(management);
-					safeSave(management);
+					break;
+				case "12":
+					chooseRoomSupervisorPage(management);
+					break;
+				case "13":
+					getRentsPage(management);
 					break;
 				default:
 					break;
