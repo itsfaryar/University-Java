@@ -502,9 +502,8 @@ public class Main {
 		sysin.next();
 	}
 	private static void guestPage(Core management) {
-		System.out.println("\t\t\t======================");
-		System.out.println("\t\t\tManagers' name:");
-		System.out.println("\t\t\t"+management.getManagerNames());
+		System.out.println("Managers' name:");
+		System.out.println(management.getManagerNames());
 		System.out.println("\t\t\t======================");
 		String name;
 		String usr_name;
@@ -529,7 +528,7 @@ public class Main {
 			if(management.addNewManager(name, usr_name, password)) {
 				safeSave(management);
 				System.out.println();
-				System.out.println("\t\t\tyour Acount has been Successfully created.");
+				System.out.println("\t\t\tyour Account has been Successfully created.");
 				System.out.println("\t\t\tanykey:Back login/signUp  |  2: Continue with this acount");
 				sysin.next().charAt(0);
 				if(ans=='2') {
@@ -555,10 +554,11 @@ public class Main {
 			Dorm.types type=null;
 			System.out.println("You are not manager of any Dorm");
 			System.out.println("Choose one Dorm or add a new one");
+			System.out.println("Q: exit L: logout");
 			System.out.println("0.add a new one");
 			System.out.println(management.getDormNames());
-			int ans=sysin.nextInt();
-			if(ans==0) {
+			String ans=upperCase(sysin.next());
+			if(ans.charAt(0)=='0') {
 				System.out.println("please enter a name for new Dorm");
 				name=sysin.next();
 				System.out.println("please enter the type of this Dorm(1.For Boys 2.For Girls");
@@ -575,19 +575,26 @@ public class Main {
 				management.addDorm(name, type);
 				safeSave(management);
 			}
+			else if(ans.charAt(0)=='Q')state=situation.EXIT;
+			else if(ans.charAt(0)=='L')management.logOut();
 			else {
-				String key=null;
-				if(management.is_dormLocked(ans-1)) {
-					System.out.println("Please enter authorizing key");
-					key=sysin.next();
-				}
-				if(management.setDorm(ans-1, key)) {
-					safeSave(management);
-					System.out.println("Signed in succesfully.");
-				}
-				else {
-					System.err.println("Wrong Authorizing Key!!!");
-				}
+				try {
+					int index=Integer.parseInt(ans);
+					if(management.is_dormFree(index-1)) {
+						String key=null;
+						if(management.is_dormLocked(index-1)) {
+							System.out.println("Please enter authorizing key");
+							key=sysin.next();
+						}
+						if(management.setDorm(index-1, key)) {
+							safeSave(management);
+							System.out.println("Signed in succesfully.");
+						}
+						else {
+							System.err.println("Wrong Authorizing Key!!!");
+						}
+					}
+				}catch (Exception e) {}
 			}
 		}
 		else {
@@ -606,67 +613,63 @@ public class Main {
 			System.out.println(" 8.Show room members        9.Remove all members from room  10.remove all members from all rooms");
 			System.out.println("11.Dorm builder            12.Room Supervisor               13.Get rents");
 			String ans=upperCase(sysin.next());
-			if(ans.equals("G")) {
-				
+			switch (ans) {
+			case "G":
+				signoutFromDormPage(management);
+				break;
+			case "L":
+				management.logOut();
+				break;
+			case "Q":
+				state=situation.EXIT;
+				safeSave(management);
+				break;
+			case "0":
+				choose_unchooseStudent(management);
+				break;
+			case "1":
+				showAllStudentsPage(management);
+				break;
+			case "2":
+				addStudentPage(management);
+				break;
+			case "3":
+				removeStudentPage(management);
+				break;
+			case "4":
+				editStudentInfoPage(management);
+				break;
+			case "5":
+				chooseRoomPage(management);
+				break;
+			case "6":
+				showRoomMatesPage(management);
+				break;
+			case "7":
+				showAllFreeRooms(management);
+				break;
+			case "8":
+				showRoomMembersPage(management);
+				break;
+			case "9":
+				removeAllMembersFromRoomPage(management);
+				break;
+			case "10":
+				removeAllStudentsFromDormPage(management);
+				break;
+			case "11":
+				dormBuilder(management);
+				break;
+			case "12":
+				chooseRoomSupervisorPage(management);
+				break;
+			case "13":
+				getRentsPage(management);
+				break;
+			default:
+				break;
 			}
-			else {
-				switch (ans) {
-				case "G":
-					signoutFromDormPage(management);
-					break;
-				case "L":
-					management.logOut();
-					break;
-				case "Q":
-					state=situation.EXIT;
-					safeSave(management);
-					break;
-				case "0":
-					choose_unchooseStudent(management);
-					break;
-				case "1":
-					showAllStudentsPage(management);
-					break;
-				case "2":
-					addStudentPage(management);
-					break;
-				case "3":
-					removeStudentPage(management);
-					break;
-				case "4":
-					editStudentInfoPage(management);
-					break;
-				case "5":
-					chooseRoomPage(management);
-					break;
-				case "6":
-					showRoomMatesPage(management);
-					break;
-				case "7":
-					showAllFreeRooms(management);
-					break;
-				case "8":
-					showRoomMembersPage(management);
-					break;
-				case "9":
-					removeAllMembersFromRoomPage(management);
-					break;
-				case "10":
-					removeAllStudentsFromDormPage(management);
-					break;
-				case "11":
-					dormBuilder(management);
-					break;
-				case "12":
-					chooseRoomSupervisorPage(management);
-					break;
-				case "13":
-					getRentsPage(management);
-					break;
-				default:
-					break;
-				}
-			}
+			
 		}
 		
 	}

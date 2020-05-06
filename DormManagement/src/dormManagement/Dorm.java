@@ -46,7 +46,7 @@ public class Dorm implements Serializable{
 	}
 	public String unsetMngr(Boolean lock) {
 		mngr=null;
-		if(lock) return getAuthorizeKey(12);
+		if(lock) return getAuthorizeKey(22);
 		else return null;
 	}
 	public int getCount_of_blocks() {

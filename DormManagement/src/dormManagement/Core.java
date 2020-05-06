@@ -11,7 +11,6 @@ public class Core implements Serializable{
 	private static final long serialVersionUID = 4877925289221741083L;
 
 	private Manager logined_manager=null;
-	private static Scanner sysin=new Scanner(System.in);
 	private ArrayList<Manager>managers=null;
 	private ArrayList<Dorm>dorms=null;
 	public Core() {
@@ -93,6 +92,10 @@ public class Core implements Serializable{
 	public boolean is_dormLocked(int index) {
 		return dorms.get(index).is_locked();
 	}
+	public boolean is_dormFree(int index) {
+		if(dorms.get(index).getMngr()==null)return true;
+		else return false;
+	}
 	public int getDormsSize() {
 		return dorms.size();
 	}
@@ -100,6 +103,14 @@ public class Core implements Serializable{
 		String out=new String();
 		for(int i=0;i<dorms.size();i++,out+="\n") {
 			out+=(i+1)+"."+dorms.get(i).getName();
+			if(dorms.get(i).getMngr()==null) {
+				out+="-Free";
+				if(dorms.get(i).is_locked())out+="(Locked)";
+				
+			}
+			else {
+				out+="-manager's name: "+dorms.get(i).getMngr().getName();
+			}
 		}
 		return out;
 	}
