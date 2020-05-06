@@ -13,11 +13,14 @@ import java.util.Scanner;
 public class Main {
 	private static Scanner sysin=new Scanner(System.in);
 	public static void main(String[] args) {
-		Test1 ts=new Test1("hello");
-		String st=ts.getH();
-		st=sysin.next();
+		//Test1 ts=new Test1("hello");
+		//ts.arr.add(new Test2());
+		//ts.arr.get(0).setTs1(ts);
+		//ts.arr.get(0).s=new String("hl");
+		//saveObject("ts",ts);
+		Test1 ts=(Test1) loadObject("ts");
 		System.out.println(ts.getH());
-		
+		System.out.println(ts.arr.get(0).s);
 	}
 	private static void saveObject(String object_name,Object obj) {
 	

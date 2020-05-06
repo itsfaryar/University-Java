@@ -2,7 +2,7 @@ package testingProj;
 import java.io.Serializable;
 public class Test2 implements Serializable{
 
-	private Test1 ts;
+	private Test1 ts=null;
 	String s=null;
 	public int numbers[] ;
 	public void doit(String sm){

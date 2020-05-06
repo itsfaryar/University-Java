@@ -4,11 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Room implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1083905778735998356L;
 	private String number;
 	private int capacity;
 	private int floor_number;
 	private int rent_price;
-	ArrayList<Student>students;
+	private Student std;
+	private ArrayList<Student>students;
 	private Student room_supervisor;
 	private Block block; 
 	public Room(Block block,String number,int floor_number,int capacity,int rent_price) {
@@ -17,6 +22,7 @@ public class Room implements Serializable{
 		this.floor_number=floor_number;
 		this.capacity=capacity;
 		this.rent_price=rent_price;
+		students=new ArrayList<Student>();
 	}
 	public String getNumber() {
 		return number;
@@ -27,8 +33,11 @@ public class Room implements Serializable{
 	public int getCapacity() {
 		return capacity;
 	}
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
+	public void increaseCapacity() {
+		this.capacity += 1;
+	}
+	public void decreaseCapacity() {
+		if(this.capacity>1)this.capacity -= 1;
 	}
 	public int getFloor_number() {
 		return floor_number;
@@ -54,9 +63,11 @@ public class Room implements Serializable{
 		}
 	}
 	public boolean addStudent(Student student) {
-		student.setRoom(this);
-		if(students.size()<capacity) {
+		if(students==null)students=new ArrayList<Student>();
+		if(capacity>0 && student!=null) {
 			students.add(student);
+			student.setRoom(this);
+			capacity--;
 			return true;
 		}
 		else {
@@ -68,6 +79,7 @@ public class Room implements Serializable{
 		if(index!=-1) {
 			student.setRoom(null);
 			students.remove(index);
+			capacity++;
 			return true;
 		}
 		else {

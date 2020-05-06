@@ -4,19 +4,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 public class Dorm implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7159495122199261102L;
 	public enum types{FOR_BOYS,FOR_GIRLS}
 	private String authorize_key=null;
 	private String name;
 	private types type;
 	private int count_of_blocks=-1;
 	private Manager mngr;
-	private ArrayList<Block> blocks;
-	private ArrayList<Student>students=null;
+	private ArrayList<Block> blocks=new ArrayList<Block>();
+	private ArrayList<Student>students=new ArrayList<Student>();
 	public Dorm(String name,types type) {
 		this.name=name;
 		this.type=type;
-		students=new ArrayList<Student>();
-		this.blocks=new ArrayList<Block>();
 		count_of_blocks=blocks.size();
 	}
 	public ArrayList<Student> getStudents() {
@@ -53,9 +55,43 @@ public class Dorm implements Serializable{
 	public types getType() {
 		return type;
 	}
+	public void setType(types t) {
+		this.type=t;
+	}
 	public Block getLastBlock() {
         return blocks != null && !blocks.isEmpty() ? blocks.get(blocks.size() - 1) : null;
     }
+	public ArrayList<Block> getBlocks(){
+		return blocks;
+	}
+	public String blocks_toString() {
+		String out=new String();
+		for(int i=0;i<blocks.size();i++) {
+			out+=blocks.get(i).getNumber();
+			if((i>1)&&((i%3)==0))out+="\n";
+			else out+="\t";
+		}
+		return out;
+	}
+	public Block getBlockAtNumber( String block_num) {
+		Block out =null;
+		for(int i=0;i<blocks.size();i++) {
+			if(blocks.get(i).getNumber().equals(block_num)) {
+				out=blocks.get(i);
+				break;
+			}
+		}
+		return out;	
+	}
+	public boolean removeBlock(String number) {
+		Block block=getBlockAtNumber(number);
+		boolean res=false;
+		if(block!=null){
+			res=blocks.remove(block);
+			count_of_blocks=blocks.size();
+		}
+		return res;
+	}
 	public boolean is_locked() {
 		if(authorize_key==null)return false;
 		else return true;

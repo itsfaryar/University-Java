@@ -3,6 +3,10 @@ package dormManagement;
 import java.io.Serializable;
 
 public class Student implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8218420104874598232L;
 	private String name;
 	private String student_number;
 	private String studing_subject;

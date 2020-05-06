@@ -2,10 +2,16 @@ package dormManagement;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Core implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4877925289221741083L;
+
 	private Manager logined_manager=null;
-	
+	private static Scanner sysin=new Scanner(System.in);
 	private ArrayList<Manager>managers=null;
 	private ArrayList<Dorm>dorms=null;
 	public Core() {
@@ -15,6 +21,14 @@ public class Core implements Serializable{
 	}
 
 	//////////////////////manager
+	public Student findChosenStd(String stdnumber) {
+		Student std_chosen=null;
+		int index=getLoginedManager().searchStudentByStdNumber(stdnumber);
+		if(index!=-1) {
+			std_chosen=getLoginedManager().getStudent(index);
+		}
+		return std_chosen;
+	}
 	public boolean is_logined() {
 		if(logined_manager==null)return false;
 		else return true;
@@ -48,9 +62,9 @@ public class Core implements Serializable{
 		}
 		return out;
 	}
-	public String getLoginedManagerDorm() {
+	public Dorm getLoginedManagerDorm() {
 		if(logined_manager.getDorm()==null)return null;
-		else return logined_manager.getDorm().getName();
+		else return logined_manager.getDorm();
 	}
 	public boolean setDorm(int index,String key) {
 		return logined_manager.setDorm(key,dorms.get(index));
@@ -75,7 +89,7 @@ public class Core implements Serializable{
 		logined_manager=null;
 	}
 	////////////////////////////////////////
-	//////////////////////////////Dorm
+	//////////////////////////////Dorms
 	public boolean is_dormLocked(int index) {
 		return dorms.get(index).is_locked();
 	}
@@ -106,4 +120,7 @@ public class Core implements Serializable{
 		}
 		else return false;
 	}
+///////Dorm builder
+	
+//////////////////////
 }

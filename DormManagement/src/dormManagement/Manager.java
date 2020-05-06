@@ -3,6 +3,10 @@ package dormManagement;
 import java.io.Serializable;
 
 public class Manager implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 917969565123275841L;
 	private String name;
 	private String usr_name;
 	private String password;
@@ -107,5 +111,33 @@ public class Manager implements Serializable{
 			dorm.getStudents().get(index).editInfo(new_name, new_studing_subject, new_year_of_entrance, new_debt);
 			return true;
 		}
+	}
+	public String freeRooms_Tostring() {
+		String out=new String();
+		
+		for(int i=0;i<dorm.getBlocks().size();i++) {
+			Block block=dorm.getBlocks().get(i);
+			for(int j=0;j<block.getRooms().size();j++) {
+				Room room=block.getRooms().get(j);
+				if(room.getCapacity()>=1) {
+					out+=block.getNumber()+":"+room.getNumber()+"("+room.getCapacity()+")\n";
+				}
+			}
+		}
+		return out;
+	}
+	
+	public boolean chooseRoom(String block_num,String room_num,Student std) {
+		boolean res=false;
+		Block block=dorm.getBlockAtNumber(block_num);
+		if(block!=null) {
+			Room room=block.getRoomAtNumber(room_num);
+			if(room!=null) {
+				std.getRoom().removeStudent(std);
+				room.addStudent(std);
+				res=true;
+			}
+		}
+		return res;
 	}
 }
