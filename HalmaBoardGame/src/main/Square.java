@@ -11,6 +11,7 @@ public class Square extends JButton{
 	private Player player;
 	private Position p;
 	private boolean is_clickble;
+	
 	public Square(Position p,PlayersIcon picons) {
 		this.is_clickble=false;
 		this.picons=picons;
@@ -21,6 +22,12 @@ public class Square extends JButton{
 	}
 	public void setClickble(boolean inp) {
 		this.is_clickble=inp;
+		if(inp) {
+			if(player==null)this.setIcon(picons.pl_none_c);
+		}
+		else {
+			if(player==null)this.setIcon(picons.pl_none);
+		}
 	}
 	public Position getPosition() {
 		return p;
@@ -50,10 +57,10 @@ public class Square extends JButton{
 		this.player=null;
 	}
 	public void choose() {
-		
+		this.setIcon(player.getIconChosen());
 	}
 	public void unChoose() {
-		
+		this.setIcon(player.getIcon());
 	}
 
 }

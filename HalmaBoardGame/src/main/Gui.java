@@ -20,8 +20,6 @@ public class Gui implements ActionListener{
 	private Core core;
 	private PlayersIcon picons;
 	private BoardAreas ba;
-	private int pl_turn_index=-1;
-	private int players_num=-1;
 	/**
 	 * Launch the application.
 	 */
@@ -90,22 +88,17 @@ public class Gui implements ActionListener{
 			players[1]=new Player(2,picons, 2,player_type.PL);
 			players[2]=null;
 			players[3]=null;
-			core.setPlayers(players[0], players[1], players[2], players[3]);
-			players_num=2;
-			pl_turn_index=0;
-			players[pl_turn_index].enableTawsSquers();
-			
+			core.setPlayers(players);
+			core.startTurns(2);
 		}    
 		else if(e.getSource()==new_four) {
 			core.clearAllSquers();
 			players[0]=new Player(1,picons, 1,player_type.PL);
-			players[1]=new Player(2,picons, 2,player_type.PL);
-			players[2]=new Player(3,picons, 3,player_type.PL);;
-			players[3]=new Player(4,picons, 4,player_type.PL);;
-			core.setPlayers(players[0], players[1], players[2], players[3]);
-			players_num=4;
-			pl_turn_index=0;
-			players[pl_turn_index].enableTawsSquers();
+			players[2]=new Player(2,picons, 2,player_type.PL);
+			players[3]=new Player(3,picons, 3,player_type.PL);
+			players[1]=new Player(4,picons, 4,player_type.PL);
+			core.setPlayers(players);
+			core.startTurns(4);
 		}
 	}
 }
