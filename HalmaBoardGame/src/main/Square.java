@@ -7,8 +7,53 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class Square extends JButton{
-	public Square() {
+	private PlayersIcon picons;
+	private Player player;
+	private Position p;
+	private boolean is_clickble;
+	public Square(Position p,PlayersIcon picons) {
+		this.is_clickble=false;
+		this.picons=picons;
 		this.setMargin(new Insets(0, 0, 0, 0));
-        this.setIcon(new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)));
+        this.setIcon(picons.pl_none);
+        this.p=p;
+        
 	}
+	public void setClickble(boolean inp) {
+		this.is_clickble=inp;
+	}
+	public Position getPosition() {
+		return p;
+	}
+	public boolean is_clickble() {
+		return this.is_clickble;
+	}
+	public void setPlayer(Player pl) {
+		this.player=pl;
+		this.player.addTaw(this);
+		this.setIcon(pl.getIcon());
+		this.is_clickble=true;
+	
+	}
+	public void unSetPlayer() {
+		this.player.removeTaw(this);
+		this.player=null;
+		this.setIcon(picons.pl_none);
+		this.is_clickble=true;
+	
+	}
+	public Player getPlayer() {
+		return player;
+	}
+	public void clear() {
+		this.setIcon(picons.pl_none);
+		this.player=null;
+	}
+	public void choose() {
+		
+	}
+	public void unChoose() {
+		
+	}
+
 }
