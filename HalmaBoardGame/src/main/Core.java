@@ -1,20 +1,12 @@
 package main;
 
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import main.Square.player_access;
 
+import javax.swing.JPanel;
+
 import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.nio.file.AccessMode;
-import java.util.Scanner;
 
 public class Core extends JPanel implements ActionListener{
 	
@@ -63,8 +55,7 @@ public class Core extends JPanel implements ActionListener{
 		players_count=pl_count;
 		pl_turn_index=0;
 		setSquersUnclickeble();
-		setAllPlayersSquers(player_access.NOT_AVAILBLE);
-		players[pl_turn_index].setAccessToAllTawsSquers(player_access.PL);
+		setAllPlayerSquersAccesses();
 	}
 	public void changeTurn() {
 		pl_turn_index++;
@@ -72,8 +63,7 @@ public class Core extends JPanel implements ActionListener{
 			pl_turn_index=0;
 		}
 		setSquersUnclickeble();
-		setAllPlayersSquers(player_access.NOT_AVAILBLE);
-		players[pl_turn_index].setAccessToAllTawsSquers(player_access.PL);
+		setAllPlayerSquersAccesses();
 		chosen_squere.unChoose();
 		chosen_squere=null;
 		is_first_move=true;
@@ -111,10 +101,16 @@ public class Core extends JPanel implements ActionListener{
             }
 		}
 	}
-	public void setAllPlayersSquers(Square.player_access acs) {
+	public void setAllPlayerSquersAccesses() {
 		for(int i=0;i<players_count;i++) {
-            players[i].setAccessToAllTawsSquers(acs);
+			if(pl_turn_index==i)  players[i].setAccessToAllTawsSquers(player_access.PL);
+			else   players[i].setAccessToAllTawsSquers(player_access.NOT_AVAILBLE);
             	
+		}
+	}
+	public void setAllPlayerSquersAccesses(player_access asc) {
+		for(int i=0;i<players_count;i++) {
+			players[i].setAccessToAllTawsSquers(asc); 	
 		}
 	}
 	public int checkPosToChainJump(int i,int j,direction dir) {
@@ -332,7 +328,7 @@ public class Core extends JPanel implements ActionListener{
 		chosen_squere.setAccess(player_access.NOT_AVAILBLE);
 		dist.setPlayer(pl);
 		dist.choose();
-		setAllPlayersSquers(player_access.NOT_AVAILBLE);
+		setAllPlayerSquersAccesses(player_access.NOT_AVAILBLE);
 		dist.setAccess(player_access.PL);
 		chosen_squere=dist;
 		is_first_move=false;
@@ -345,7 +341,7 @@ public class Core extends JPanel implements ActionListener{
 				chosen_squere=sqr;
 				if(chosen_squere.getAccessType()==player_access.PL) {
 					setSquersUnclickeble();
-					setAllPlayersSquers(player_access.NOT_AVAILBLE);
+					setAllPlayerSquersAccesses(player_access.NOT_AVAILBLE);
 					chosen_squere.setAccess(player_access.PL);
 					chosen_squere.choose();
 					firstMove(chosen_squere.getPosition());
@@ -357,8 +353,7 @@ public class Core extends JPanel implements ActionListener{
 			}
 			else if(chosen_squere==sqr) {
 				setSquersUnclickeble();
-				setAllPlayersSquers(player_access.NOT_AVAILBLE);
-				chosen_squere.getPlayer().setAccessToAllTawsSquers(player_access.PL);
+				setAllPlayerSquersAccesses();
 				chosen_squere.unChoose();
 				chosen_squere=null;
 			}

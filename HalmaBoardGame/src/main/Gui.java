@@ -2,13 +2,18 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
 
 import main.Player.player_type;
-
-import java.awt.event.*;
 
 public class Gui implements ActionListener{
 
@@ -16,7 +21,8 @@ public class Gui implements ActionListener{
 	private JMenuBar menu_bar;
 	private JMenu menu_new;
 	private JMenuItem new_two,new_one,new_four;
-	JButton change_move;
+	private JButton start_new;
+	private JButton change_move;
 	private Player[]players;
 	private Core core;
 	private PlayersIcon picons;
@@ -24,6 +30,11 @@ public class Gui implements ActionListener{
 	/**
 	 * Launch the application.
 	 */
+	public void startCore(Player pls[],int players_count) {
+		core.clearAllSquers();
+		core.setPlayers(pls);
+		core.startTurns(players_count);
+	}
 	public static void main(String[] args) {
 		
 		EventQueue.invokeLater(new Runnable() {
@@ -62,8 +73,14 @@ public class Gui implements ActionListener{
         JToolBar tools = new JToolBar();
         tools.setFloatable(false);
         //board.add(tools, BorderLayout.PAGE_START);
+        
         menu_bar=new JMenuBar();
         frame.getContentPane().add(menu_bar, BorderLayout.PAGE_START);
+        
+        start_new=new JButton("New Game");
+        start_new.addActionListener(this);
+        menu_bar.add(start_new);
+        menu_bar.add(new JSeparator());
         menu_new=new JMenu("New Game");
         menu_bar.add(menu_new);
         new_two=new JMenuItem("Tow Players");
@@ -72,9 +89,13 @@ public class Gui implements ActionListener{
         new_four.addActionListener(this);
         menu_new.add(new_two);
         menu_new.add(new_four);
+        
         change_move=new JButton("End Move");
         change_move.addActionListener(this);
         menu_bar.add(change_move);
+        
+       
+       
         //menu_new.add(new Actiona)
         //menu_bar.add(two_pl);
         
@@ -85,8 +106,12 @@ public class Gui implements ActionListener{
 		frame.pack();
         frame.setMinimumSize(frame.getSize());
 	}
-	public void actionPerformed(ActionEvent e) {    
-		if(e.getSource()==new_two) {
+	public void actionPerformed(ActionEvent e) {  
+		if(e.getSource()==start_new) {
+			NewGameFrame new_game=new NewGameFrame(this,picons);
+			new_game.setVisible(true);
+		}
+		else if(e.getSource()==new_two) {
 			core.clearAllSquers();
 			players[0]=new Player(1,picons, 1,player_type.PL);
 			players[1]=new Player(2,picons, 2,player_type.PL);
@@ -107,5 +132,6 @@ public class Gui implements ActionListener{
 		else if(e.getSource()==change_move) {
 			if(core.is_playing())core.changeTurn();
 		}
+		
 	}
 }

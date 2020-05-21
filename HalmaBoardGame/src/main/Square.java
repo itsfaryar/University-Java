@@ -1,9 +1,7 @@
 package main;
 
 import java.awt.Insets;
-import java.awt.image.BufferedImage;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class Square extends JButton{
