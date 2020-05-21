@@ -5,12 +5,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import main.Square.player_access;
+
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.nio.file.AccessMode;
 import java.util.Scanner;
 
 public class Core extends JPanel implements ActionListener{
@@ -19,16 +22,20 @@ public class Core extends JPanel implements ActionListener{
 	private PlayersIcon picons;
 	private BoardAreas ba;
 	private Square chosen_squere=null;
-	private Player[]players;
+	private Player[]players=null;
 	private int pl_turn_index=-1;
 	private int players_count=-1;
 	private enum direction{R,L,U,D,RU,LU,RD,LD};
+	boolean is_first_move=true;
 	public Core(BoardAreas ba,PlayersIcon picons) {
 		this.picons=picons;
 		this.ba=ba;
 		initBoard();
 	}
-	
+	public boolean is_playing() {
+		if(players==null)return false;
+		else return true;
+	}
 	public void initBoard() {
 		setLayout(new GridLayout(0,8));
 		int c=1;
@@ -51,11 +58,13 @@ public class Core extends JPanel implements ActionListener{
 		
 	}
 	public void startTurns(int pl_count) {
+		is_first_move=true;
 		chosen_squere=null;
 		players_count=pl_count;
 		pl_turn_index=0;
 		setSquersUnclickeble();
-		players[pl_turn_index].enableTawsSquers();
+		setAllPlayersSquers(player_access.NOT_AVAILBLE);
+		players[pl_turn_index].setAccessToAllTawsSquers(player_access.PL);
 	}
 	public void changeTurn() {
 		pl_turn_index++;
@@ -63,8 +72,11 @@ public class Core extends JPanel implements ActionListener{
 			pl_turn_index=0;
 		}
 		setSquersUnclickeble();
-		players[pl_turn_index].enableTawsSquers();
-		
+		setAllPlayersSquers(player_access.NOT_AVAILBLE);
+		players[pl_turn_index].setAccessToAllTawsSquers(player_access.PL);
+		chosen_squere.unChoose();
+		chosen_squere=null;
+		is_first_move=true;
 	}
 	public void clearAllSquers() {
 		
@@ -94,177 +106,285 @@ public class Core extends JPanel implements ActionListener{
 	public void setSquersUnclickeble() {
 		for (int i = 0; i < board_squares.length; i++) {
 			for (int j = 0; j < board_squares[i].length; j++) {
-            	board_squares[i][j].setClickble(false);
+            	board_squares[i][j].setAccess(player_access.NONE);
             	
             }
 		}
 	}
-	public void checkPosToChainJump(int i,int j,direction dir) {
+	public void setAllPlayersSquers(Square.player_access acs) {
+		for(int i=0;i<players_count;i++) {
+            players[i].setAccessToAllTawsSquers(acs);
+            	
+		}
+	}
+	public int checkPosToChainJump(int i,int j,direction dir) {
+		int availble_moves=0;
 		if(dir==direction.U) {
 			i--;
 			if(i>=0) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
-					
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
 		else if(dir==direction.D) {
 			i++;
 			if(i<=7) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
-				
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
 		else if(dir==direction.R) {
 			j++;
 			if(j<=7) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
-					
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
 		else if(dir==direction.L) {
 			j--;
 			if(j>=0) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
-					
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
 		else if(dir==direction.RU) {
 			i--;j++;
 			if(i>=0&&j<=7) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
-					
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
 		else if(dir==direction.LU) {
 			i--;j--;
 			if(i>=0&&j>=0) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
 		else if(dir==direction.LD) {
 			i++;j--;
 			if(i<=7&&j>=0) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
-					
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
 		else if(dir==direction.RD) {
 			i++;j++;
 			if(i<=7&&j<=7) {
-				if(board_squares[i][j].getPlayer()==null) {
-					board_squares[i][j].setClickble(true);
-					chooseSquere(new Position(i, j), true);
-					
+				if(board_squares[i][j].getAccessType()==player_access.NONE) {
+					board_squares[i][j].setAccess(player_access.JUMP);
+					availble_moves++;
 				}
 			}
 		}
+		return  availble_moves;
 	}
-	public void checkChosenPos(Position past_pos,int i,int j,direction dir,boolean chain_jump) {
-		if(chain_jump) {
-			if(board_squares[i][j].getPlayer()!=null) {
-				
-				//checkPosToChainJump(i,j,dir);
-				
-			}
-		
-		}
-		else {
-			if(board_squares[i][j].getPlayer()==null) {
-				board_squares[i][j].setClickble(true);
-			}
-			else {
-				checkPosToChainJump(i,j,dir);
-			}
-		}
-	}
-	public void chooseSquere(Position p,boolean chain_jump) {
+	public void firstMove(Position p) {
 		int i,j;
 		i=p.i-1;j=p.j;
 		if(i>=0) {
-			checkChosenPos(p, i, j,direction.U, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.U);
+			}
 		}
 		i=p.i+1;j=p.j;
 		if(i<=7) {
-			checkChosenPos(p, i, j,direction.D, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.D);
+			}
 		}
 		i=p.i;j=p.j+1;
 		if(j<=7) {
-			checkChosenPos(p, i, j,direction.R, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.R);
+			}
 		}
 		i=p.i;j=p.j-1;
 		if(j>=0) {
-			checkChosenPos(p, i, j,direction.L, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.L);
+			}
 		}
 		
 		i=p.i-1;j=p.j+1;
 		if(i>=0 && j<=7) {
-			checkChosenPos(p, i, j,direction.RU, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.RU);
+			}
 		}
 		i=p.i-1;j=p.j-1;
 		if(i>=0 && j>=0) {
-			checkChosenPos(p, i, j,direction.LU, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.LU);
+			}
 		}
 		i=p.i+1;j=p.j-1;
 		if(i<=7&&j>=0) {
-			checkChosenPos(p, i, j,direction.LD, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.LD);
+			}
 		}
 		i=p.i+1;j=p.j+1;
 		if(i<=7&&j<=7) {
-			checkChosenPos(p, i, j,direction.RD, chain_jump);
+			if(board_squares[i][j].getAccessType()==player_access.NONE) {
+				board_squares[i][j].setAccess(player_access.DIRECT);
+			}
+			else {
+				checkPosToChainJump(i,j,direction.RD);
+			}
 		}
 	}
+	public int chainMove(Position p) {
+		int  availble_moves=0;
+		int i,j;
+		i=p.i-1;j=p.j;
+		if(i>=0) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.U);
+			}
+		}
+		i=p.i+1;j=p.j;
+		if(i<=7) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.D);
+			}
+			
+		}
+		i=p.i;j=p.j+1;
+		if(j<=7) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.R);
+			}
+		}
+		i=p.i;j=p.j-1;
+		if(j>=0) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.L);
+			}
+			
+		}
+		
+		i=p.i-1;j=p.j+1;
+		if(i>=0 && j<=7) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.RU);
+			}
+		}
+		i=p.i-1;j=p.j-1;
+		if(i>=0 && j>=0) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.LU);
+			}
+		}
+		i=p.i+1;j=p.j-1;
+		if(i<=7&&j>=0) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.LD);
+			}
+		}
+		i=p.i+1;j=p.j+1;
+		if(i<=7&&j<=7) {
+			if(board_squares[i][j].getAccessType()==player_access.NOT_AVAILBLE) {
+				availble_moves+=checkPosToChainJump(i,j,direction.RD);
+			}
+		}
+		return availble_moves;
+	}
 	public void moveTawTo(Square dist) {
+		setSquersUnclickeble();
 		Player pl=chosen_squere.getPlayer();
 		chosen_squere.unSetPlayer();
+		chosen_squere.setAccess(player_access.NOT_AVAILBLE);
 		dist.setPlayer(pl);
-		changeTurn();
+		dist.choose();
+		setAllPlayersSquers(player_access.NOT_AVAILBLE);
+		dist.setAccess(player_access.PL);
+		chosen_squere=dist;
+		is_first_move=false;
+		
 	}
 	public void actionPerformed(ActionEvent e) { 
 		Square sqr=(Square) e.getSource();
-		if(chosen_squere==null ) {
-			chosen_squere=sqr;
-			if(!chosen_squere.is_clickble())chosen_squere=null;
-			else{
+		if(is_first_move) {
+			if(chosen_squere==null ) {
+				chosen_squere=sqr;
+				if(chosen_squere.getAccessType()==player_access.PL) {
+					setSquersUnclickeble();
+					setAllPlayersSquers(player_access.NOT_AVAILBLE);
+					chosen_squere.setAccess(player_access.PL);
+					chosen_squere.choose();
+					firstMove(chosen_squere.getPosition());
+					
+				}
+				else {
+					chosen_squere=null;
+				}
+			}
+			else if(chosen_squere==sqr) {
 				setSquersUnclickeble();
-				chosen_squere.setClickble(true);
-				chosen_squere.choose();
-				chooseSquere(chosen_squere.getPosition(),false);
-				System.out.println(chosen_squere.getPosition().i+","+chosen_squere.getPosition().j);
+				setAllPlayersSquers(player_access.NOT_AVAILBLE);
+				chosen_squere.getPlayer().setAccessToAllTawsSquers(player_access.PL);
+				chosen_squere.unChoose();
+				chosen_squere=null;
+			}
+			else {
+				if(sqr.getAccessType()==player_access.DIRECT) {
+					moveTawTo(sqr);
+					changeTurn();
+				}
+				else if(sqr.getAccessType()==player_access.JUMP){
+					moveTawTo(sqr);
+					if(chainMove(chosen_squere.getPosition())==0) {
+						changeTurn();
+					}
+				}
 			}
 		}
-		else if(chosen_squere==sqr) {
-			setSquersUnclickeble();
-			chosen_squere.getPlayer().enableTawsSquers();
-			chosen_squere.unChoose();
-			chosen_squere=null;
-		}
 		else {
-			if(sqr.is_clickble()) {
-				Player pl=chosen_squere.getPlayer();
-				chosen_squere.unChoose();
+			if(sqr.getAccessType()==player_access.DIRECT) {
 				moveTawTo(sqr);
-				chosen_squere=null;
+				changeTurn();
+			}
+			else if(sqr.getAccessType()==player_access.JUMP){
+				moveTawTo(sqr);
+				if(chainMove(chosen_squere.getPosition())==0) {
+					changeTurn();
+				}
 			}
 		}
 	}

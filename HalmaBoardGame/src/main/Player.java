@@ -33,9 +33,9 @@ public class Player {
 	public void addTaw(Square taw) {
 		taws.add(taw);
 	}
-	public void enableTawsSquers() {
+	public void setAccessToAllTawsSquers(Square.player_access acs) {
 		for(int i=0;i<taws.size();i++) {
-			taws.get(i).setClickble(true);
+			taws.get(i).setAccess(acs);
 		}
 	}
 	

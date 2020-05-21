@@ -16,6 +16,7 @@ public class Gui implements ActionListener{
 	private JMenuBar menu_bar;
 	private JMenu menu_new;
 	private JMenuItem new_two,new_one,new_four;
+	JButton change_move;
 	private Player[]players;
 	private Core core;
 	private PlayersIcon picons;
@@ -71,6 +72,9 @@ public class Gui implements ActionListener{
         new_four.addActionListener(this);
         menu_new.add(new_two);
         menu_new.add(new_four);
+        change_move=new JButton("End Move");
+        change_move.addActionListener(this);
+        menu_bar.add(change_move);
         //menu_new.add(new Actiona)
         //menu_bar.add(two_pl);
         
@@ -99,6 +103,9 @@ public class Gui implements ActionListener{
 			players[1]=new Player(4,picons, 4,player_type.PL);
 			core.setPlayers(players);
 			core.startTurns(4);
+		}
+		else if(e.getSource()==change_move) {
+			if(core.is_playing())core.changeTurn();
 		}
 	}
 }
