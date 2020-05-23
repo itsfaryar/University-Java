@@ -24,6 +24,10 @@ import java.awt.BorderLayout;
 public class Gui implements ActionListener{
 
 	private JFrame frmHalmaGame;
+	private NewGameFrame gsetting;
+	JButton btnStartNewGame;
+	JButton btnResume;
+	PlayersIcon picons=new PlayersIcon();
 	/**
 	 * Launch the application.
 	 */
@@ -46,7 +50,6 @@ public class Gui implements ActionListener{
 	 */
 	public Gui() {
 		initialize();
-		
 	}
 
 	/**
@@ -62,19 +65,25 @@ public class Gui implements ActionListener{
 		frmHalmaGame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmHalmaGame.setLocationByPlatform(true);
 		
-		JButton btnResume = new JButton("Resume");
+		btnResume = new JButton("Resume");
 		btnResume.setBounds(15, 207, 145, 25);
 		btnResume.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if(gsetting!=null)gsetting.setGameBoardVisible(true);
 			}
 		});
 		frmHalmaGame.getContentPane().setLayout(null);
 		frmHalmaGame.getContentPane().add(btnResume);
 		
-		JButton btnStartNewGame = new JButton("Start New");
+		btnStartNewGame = new JButton("Start New");
 		btnStartNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				if(gsetting!=null) {
+					gsetting.disposeGame();
+					gsetting.dispose();
+				}
+				gsetting=new NewGameFrame(picons);
+				gsetting.setVisible(true);
 			}
 		});
 		btnStartNewGame.setBounds(15, 239, 145, 25);

@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextField;
 
 public class NewGameFrame extends JFrame implements ActionListener{
 
@@ -62,9 +63,14 @@ public class NewGameFrame extends JFrame implements ActionListener{
 	private JLabel lblPlayer_4;
 	private JComboBox pl4_type_choose;
 	private JPanel player4_options;
+	private GameBoard g;
+	private JTextField wOfBoard;
+	private JTextField cOfTaws;
 	/**
 	 * Create the frame.
+	 * @wbp.parser.constructor
 	 */
+	
 	public NewGameFrame(PlayersIcon picons) {
 		players=new Player[4];
 		pl1_icons=new JButton[7];
@@ -81,7 +87,7 @@ public class NewGameFrame extends JFrame implements ActionListener{
 		pl4_type=player_type.PL;
 		setTitle("Start New Game");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 864, 425);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -115,9 +121,13 @@ public class NewGameFrame extends JFrame implements ActionListener{
 			}
 		});
 		contentPane.setLayout(null);
-		comboBox.setBounds(208, 0, 196, 24);
+		comboBox.setBounds(554, 0, 162, 24);
 		
 		contentPane.add(comboBox);
+		
+		JLabel lblDimintionOfBoaed = new JLabel("dimintion of board");
+		lblDimintionOfBoaed.setBounds(12, -14, 143, 52);
+		contentPane.add(lblDimintionOfBoaed);
 		
 		panel = new JPanel();
 		panel.setBounds(12, 36, 823, 286);
@@ -218,7 +228,7 @@ public class NewGameFrame extends JFrame implements ActionListener{
 		btn_cancel = new JButton("cancel");
 		btn_cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dispose();
+				setVisible(false);
 			}
 		});
 		btn_cancel.setBounds(362, 355, 90, 33);
@@ -232,17 +242,19 @@ public class NewGameFrame extends JFrame implements ActionListener{
 					players[1]=new Player(2,picons, pl2_icon_index+1,pl2_type);
 					players[2]=null;
 					players[3]=null;
-					GameBoard g=new GameBoard();
+					g=new GameBoard(picons);
 					g.startCore(players,2);
+					setVisible(false);
+					
 				}
 				else if(players_count==4) {
 					players[0]=new Player(1,picons, pl1_icon_index+1,pl1_type);
 					players[2]=new Player(2,picons, pl2_icon_index+1,pl2_type);
 					players[3]=new Player(3,picons, pl3_icon_index+1,pl3_type);
 					players[1]=new Player(4,picons, pl4_icon_index+1,pl4_type);
-					GameBoard g=new GameBoard();
+					g=new GameBoard(picons);
 					g.startCore(players,4);
-					dispose();
+					setVisible(false);
 				}
 			}
 		});
@@ -250,8 +262,23 @@ public class NewGameFrame extends JFrame implements ActionListener{
 		btn_ok.setBounds(260, 355, 90, 33);
 		contentPane.add(btn_ok);
 		
+		wOfBoard = new JTextField();
+		wOfBoard.setBounds(154, 3, 90, 19);
+		contentPane.add(wOfBoard);
+		wOfBoard.setColumns(10);
+		
+		JLabel lblCountOfTaws = new JLabel("count of taws in row");
+		lblCountOfTaws.setBounds(269, -14, 162, 52);
+		contentPane.add(lblCountOfTaws);
+		
+		cOfTaws = new JTextField();
+		cOfTaws.setColumns(10);
+		cOfTaws.setBounds(428, 3, 90, 19);
+		contentPane.add(cOfTaws);
+		
 	}
 	public NewGameFrame(GameBoard g,PlayersIcon picons) {
+		this.g=g;
 		players=new Player[4];
 		pl1_icons=new JButton[7];
 		pl2_icons=new JButton[7];
@@ -267,7 +294,7 @@ public class NewGameFrame extends JFrame implements ActionListener{
 		pl4_type=player_type.PL;
 		setTitle("Start New Game");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 864, 425);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -404,7 +431,7 @@ public class NewGameFrame extends JFrame implements ActionListener{
 		btn_cancel = new JButton("cancel");
 		btn_cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dispose();
+				setVisible(false);
 			}
 		});
 		btn_cancel.setBounds(362, 355, 90, 33);
@@ -419,7 +446,7 @@ public class NewGameFrame extends JFrame implements ActionListener{
 					players[2]=null;
 					players[3]=null;
 					g.startCore(players,2);
-					dispose();
+					setVisible(false);
 				}
 				else if(players_count==4) {
 					players[0]=new Player(1,picons, pl1_icon_index+1,pl1_type);
@@ -427,7 +454,7 @@ public class NewGameFrame extends JFrame implements ActionListener{
 					players[3]=new Player(3,picons, pl3_icon_index+1,pl3_type);
 					players[1]=new Player(4,picons, pl4_icon_index+1,pl4_type);
 					g.startCore(players,4);
-					dispose();
+					setVisible(false);
 				}
 			}
 		});
@@ -468,6 +495,15 @@ public class NewGameFrame extends JFrame implements ActionListener{
 		for(int i=0;i<bs.length;i++) {
 			bs[i].setBackground(Color.WHITE);
 		}
+	}
+	public GameBoard getGameBoard(){
+		return g;
+	}
+	public void disposeGame() {
+		if(g!=null)g.dispose();
+	}
+	public void setGameBoardVisible(boolean b) {
+		if(g!=null)g.setVisible(b);
 	}
 	public void findAndSetOption(JButton b) {
 		boolean found=false;

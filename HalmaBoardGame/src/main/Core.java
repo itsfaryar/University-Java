@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class Core extends JPanel implements ActionListener{
 	
-	private Square[][] board_squares = new Square[8][8];
+	private Square[][] board_squares;
 	private PlayersIcon picons;
 	private BoardAreas ba;
 	private Square chosen_squere=null;
@@ -19,7 +19,9 @@ public class Core extends JPanel implements ActionListener{
 	private int players_count=-1;
 	private enum direction{R,L,U,D,RU,LU,RD,LD};
 	boolean is_first_move=true;
-	public Core(BoardAreas ba,PlayersIcon picons) {
+	public Core(BoardAreas ba,PlayersIcon picons,int w,int n) {
+		board_squares= new Square[w][w];
+		setLayout(new GridLayout(0,w));
 		this.picons=picons;
 		this.ba=ba;
 		initBoard();
@@ -29,7 +31,7 @@ public class Core extends JPanel implements ActionListener{
 		else return true;
 	}
 	public void initBoard() {
-		setLayout(new GridLayout(0,8));
+		
 		int c=1;
 		for (int i = 0; i < board_squares.length; i++) {
             for (int j = 0; j < board_squares[i].length; j++) {
