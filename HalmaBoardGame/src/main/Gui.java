@@ -1,47 +1,39 @@
 package main;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-import javax.swing.JToolBar;
+import javax.swing.JButton;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 
-import main.Player.player_type;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import net.miginfocom.swing.MigLayout;
+import java.awt.Dialog.ModalExclusionType;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.BorderLayout;
+
 
 public class Gui implements ActionListener{
 
-	private JFrame frame;
-	private JMenuBar menu_bar;
-	private JMenu menu_new;
-	private JMenuItem new_two,new_one,new_four;
-	private JButton start_new;
-	private JButton change_move;
-	private Player[]players;
-	private Core core;
-	private PlayersIcon picons;
-	private BoardAreas ba;
+	private JFrame frmHalmaGame;
 	/**
 	 * Launch the application.
 	 */
-	public void startCore(Player pls[],int players_count) {
-		core.clearAllSquers();
-		core.setPlayers(pls);
-		core.startTurns(players_count);
-	}
 	public static void main(String[] args) {
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Gui window = new Gui();
-					window.frame.setVisible(true);
+					window.frmHalmaGame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -53,10 +45,6 @@ public class Gui implements ActionListener{
 	 * Create the application.
 	 */
 	public Gui() {
-		ba=new BoardAreas();
-		picons=new PlayersIcon();
-		core=new Core(ba,picons);
-		players=new Player[4];
 		initialize();
 		
 	}
@@ -66,72 +54,50 @@ public class Gui implements ActionListener{
 	 */
 	private void initialize() {
 		
-		frame = new JFrame();
-		frame.setBounds(100, 100, 1000, 1000);
-		frame.getContentPane().add(core);
-		//contentpane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        JToolBar tools = new JToolBar();
-        tools.setFloatable(false);
-        //board.add(tools, BorderLayout.PAGE_START);
+		frmHalmaGame = new JFrame();
+		frmHalmaGame.setResizable(false);
+		frmHalmaGame.setTitle("Halma Game");
+		frmHalmaGame.setBounds(100, 100, 190, 389);
         
-        menu_bar=new JMenuBar();
-        frame.getContentPane().add(menu_bar, BorderLayout.PAGE_START);
-        
-        start_new=new JButton("New Game");
-        start_new.addActionListener(this);
-        menu_bar.add(start_new);
-        menu_bar.add(new JSeparator());
-        menu_new=new JMenu("New Game");
-        menu_bar.add(menu_new);
-        new_two=new JMenuItem("Tow Players");
-        new_two.addActionListener(this);
-        new_four=new JMenuItem("Four Players");
-        new_four.addActionListener(this);
-        menu_new.add(new_two);
-        menu_new.add(new_four);
-        
-        change_move=new JButton("End Move");
-        change_move.addActionListener(this);
-        menu_bar.add(change_move);
-        
-       
-       
-        //menu_new.add(new Actiona)
-        //menu_bar.add(two_pl);
-        
-        //tools.add(menu_new); 
-        tools.addSeparator();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationByPlatform(true);
-		frame.pack();
-        frame.setMinimumSize(frame.getSize());
+		frmHalmaGame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmHalmaGame.setLocationByPlatform(true);
+		
+		JButton btnResume = new JButton("Resume");
+		btnResume.setBounds(15, 207, 145, 25);
+		btnResume.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		frmHalmaGame.getContentPane().setLayout(null);
+		frmHalmaGame.getContentPane().add(btnResume);
+		
+		JButton btnStartNewGame = new JButton("Start New");
+		btnStartNewGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnStartNewGame.setBounds(15, 239, 145, 25);
+		frmHalmaGame.getContentPane().add(btnStartNewGame);
+		
+		JButton btnShowScores = new JButton("Show Scores");
+		btnShowScores.setBounds(15, 276, 145, 25);
+		frmHalmaGame.getContentPane().add(btnShowScores);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(15, 12, 160, 170);
+		frmHalmaGame.getContentPane().add(panel);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblImage = new JLabel(new ImageIcon("Data/Images/1.png"));
+		panel.add(lblImage, BorderLayout.WEST);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.setBounds(15, 313, 145, 25);
+		frmHalmaGame.getContentPane().add(btnExit);
 	}
 	public void actionPerformed(ActionEvent e) {  
-		if(e.getSource()==start_new) {
-			NewGameFrame new_game=new NewGameFrame(this,picons);
-			new_game.setVisible(true);
-		}
-		else if(e.getSource()==new_two) {
-			core.clearAllSquers();
-			players[0]=new Player(1,picons, 1,player_type.PL);
-			players[1]=new Player(2,picons, 2,player_type.PL);
-			players[2]=null;
-			players[3]=null;
-			core.setPlayers(players);
-			core.startTurns(2);
-		}    
-		else if(e.getSource()==new_four) {
-			core.clearAllSquers();
-			players[0]=new Player(1,picons, 1,player_type.PL);
-			players[2]=new Player(2,picons, 2,player_type.PL);
-			players[3]=new Player(3,picons, 3,player_type.PL);
-			players[1]=new Player(4,picons, 4,player_type.PL);
-			core.setPlayers(players);
-			core.startTurns(4);
-		}
-		else if(e.getSource()==change_move) {
-			if(core.is_playing())core.changeTurn();
-		}
+		
 		
 	}
 }
