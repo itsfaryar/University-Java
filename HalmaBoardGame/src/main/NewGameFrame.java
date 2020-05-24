@@ -279,7 +279,7 @@ public class NewGameFrame extends JFrame implements ActionListener{
 		panel.add(pl4_type_choose);
 		pl4_type_choose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(pl1_type_choose.getSelectedItem().toString()=="Computer") {
+				if(pl4_type_choose.getSelectedItem().toString()=="Computer") {
 					pl4_type=player_type.AI;
 				}
 				else {
