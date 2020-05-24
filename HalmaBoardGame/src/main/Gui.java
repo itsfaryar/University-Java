@@ -19,6 +19,7 @@ import java.awt.Dialog.ModalExclusionType;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 
 public class Gui implements ActionListener{
@@ -57,6 +58,8 @@ public class Gui implements ActionListener{
 	private void initialize() {
 		
 		frmHalmaGame = new JFrame();
+		frmHalmaGame.getContentPane().setBackground(Color.DARK_GRAY);
+		frmHalmaGame.setBackground(Color.DARK_GRAY);
 		frmHalmaGame.setResizable(false);
 		frmHalmaGame.setTitle("Halma Game");
 		frmHalmaGame.setBounds(100, 100, 190, 389);
@@ -65,6 +68,7 @@ public class Gui implements ActionListener{
 		frmHalmaGame.setLocationByPlatform(true);
 		
 		btnResume = new JButton("Resume");
+		btnResume.setBackground(Color.LIGHT_GRAY);
 		btnResume.setBounds(15, 207, 145, 25);
 		btnResume.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -75,6 +79,7 @@ public class Gui implements ActionListener{
 		frmHalmaGame.getContentPane().add(btnResume);
 		
 		btnStartNewGame = new JButton("Start New");
+		btnStartNewGame.setBackground(Color.LIGHT_GRAY);
 		btnStartNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(gsetting!=null) {
@@ -89,10 +94,18 @@ public class Gui implements ActionListener{
 		frmHalmaGame.getContentPane().add(btnStartNewGame);
 		
 		JButton btnShowScores = new JButton("Show Scores");
+		btnShowScores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				WinnerDataBase winnerp=new WinnerDataBase();
+				winnerp.display();
+			}
+		});
+		btnShowScores.setBackground(Color.LIGHT_GRAY);
 		btnShowScores.setBounds(15, 276, 145, 25);
 		frmHalmaGame.getContentPane().add(btnShowScores);
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.DARK_GRAY);
 		panel.setBounds(15, 12, 160, 170);
 		frmHalmaGame.getContentPane().add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
@@ -101,6 +114,13 @@ public class Gui implements ActionListener{
 		panel.add(lblImage, BorderLayout.WEST);
 		
 		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 System.exit(0);
+				
+			}
+		});
+		btnExit.setBackground(Color.LIGHT_GRAY);
 		btnExit.setBounds(15, 313, 145, 25);
 		frmHalmaGame.getContentPane().add(btnExit);
 	}

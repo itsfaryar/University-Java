@@ -26,7 +26,7 @@ public class Square extends JButton{
 		else {
 			if(player==null)this.setIcon(picons.pl_none);
 		}
-		this.setText(access+"");
+		//this.setText(access+"");
 	}
 	public Position getPosition() {
 		return p;

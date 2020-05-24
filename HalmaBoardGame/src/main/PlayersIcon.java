@@ -10,13 +10,13 @@ public class PlayersIcon {
 	public ImageIcon pl_none;
 	public ImageIcon pl_none_c;
 	public PlayersIcon(int w){
-		if(w>8) {
-			w=(640/w);
+		if(w>10) {
+			w=(500/w);
 		}
-		else if(w==-1) {
+		else {
 			w=64;
 		}
-		pl_none=resizeIcon(new ImageIcon("Players/none.png"),w);
+		pl_none=resizeIcon(new ImageIcon("Data/Players/none.png"),w);
 		pl_none_c=resizeIcon(new ImageIcon("Data/Players/none_c.png"),w);
 		icons[0]=resizeIcon(new ImageIcon("Data/Players/1.png"),w);
 		icons_c[0]=resizeIcon(new ImageIcon("Data/Players/1_c.png"),w);
