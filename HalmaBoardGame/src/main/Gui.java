@@ -27,7 +27,6 @@ public class Gui implements ActionListener{
 	private NewGameFrame gsetting;
 	JButton btnStartNewGame;
 	JButton btnResume;
-	PlayersIcon picons=new PlayersIcon();
 	/**
 	 * Launch the application.
 	 */
@@ -82,7 +81,7 @@ public class Gui implements ActionListener{
 					gsetting.disposeGame();
 					gsetting.dispose();
 				}
-				gsetting=new NewGameFrame(picons);
+				gsetting=new NewGameFrame();
 				gsetting.setVisible(true);
 			}
 		});

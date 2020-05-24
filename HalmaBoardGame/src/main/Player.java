@@ -11,12 +11,18 @@ public class Player {
 	public enum player_type{AI,PL}
 	public player_type type;
 	private ArrayList<Square>taws ;
-	public Player(int number,PlayersIcon picons,int icon_num,player_type type) {
+	private String name;
+	
+	public Player(String name,int number,PlayersIcon picons,int icon_num,player_type type) {
+		this.name=name;
 		this.type=type;
 		this.number=number;
 		icon=picons.icons[icon_num-1];
 		icon_chosen=picons.icons_c[icon_num-1];
 		taws=new ArrayList<Square>();
+	}
+	public String getName() {
+		return name;
 	}
 	public ImageIcon getIcon() {
 		return this.icon;

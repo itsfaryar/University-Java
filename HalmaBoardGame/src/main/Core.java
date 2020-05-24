@@ -95,6 +95,12 @@ public class Core extends JPanel implements ActionListener{
 		if(pls[3]!=null)setStarterTaws(pls[3]);
 		
 	}
+	public Player[] getPlayers() {
+		return players;
+	}
+	public Player getPlayerThisTurn() {
+		return players[pl_turn_index];
+	}
 	public void setSquersUnclickeble() {
 		for (int i = 0; i < board_squares.length; i++) {
 			for (int j = 0; j < board_squares[i].length; j++) {
